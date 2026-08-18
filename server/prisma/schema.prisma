@@ -1,0 +1,228 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  email     String?  @unique
+  password  String?
+  token     String?
+  role      Int      @default(0) // 0 ADMIN - 1 USER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum RegistrationPolicy {
+  OPEN
+  INVITE_ONLY
+  RESTRICTED_DOMAINS
+}
+
+model User {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  email     String  @unique
+  name      String?
+  avatarUrl String?
+
+  role UserRole @default(USER)
+
+  theme    Theme  @default(SYSTEM)
+  language String @default("en")
+
+  emailNotifications       Boolean @default(true)
+  notifyOnMyRequestComment Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  feedbackRequests FeedbackRequest[]
+  votes            Vote[]
+  comments         Comment[]
+
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// ─────────────────────────────────────────────
+// FEEDBACK REQUEST
+// ─────────────────────────────────────────────
+
+model FeedbackRequest {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+
+  pinned Boolean @default(false)
+
+  authorId   String @db.ObjectId
+  categoryId String @db.ObjectId
+  statusId   String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  author   User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  status   Status   @relation(fields: [statusId], references: [id], onDelete: Restrict)
+
+  votes    Vote[]
+  comments Comment[]
+
+  @@index([authorId])
+  @@index([categoryId])
+  @@index([statusId])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([pinned])
+  @@index([title])
+  @@map("feedback_requests")
+}
+
+// ─────────────────────────────────────────────
+// CATEGORY
+// ─────────────────────────────────────────────
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  feedbackRequests FeedbackRequest[]
+
+  @@unique([name])
+  @@index([isActive])
+  @@map("categories")
+}
+
+// ─────────────────────────────────────────────
+// STATUS
+// ─────────────────────────────────────────────
+
+model Status {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+
+  // Controls ordering in the UI
+  position Int @default(0)
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  feedbackRequests FeedbackRequest[]
+
+  @@unique([name])
+  @@index([isActive])
+  @@index([position])
+  @@map("statuses")
+}
+
+// ─────────────────────────────────────────────
+// VOTE
+// ─────────────────────────────────────────────
+
+model Vote {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId            String @db.ObjectId
+  feedbackRequestId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  feedbackRequest FeedbackRequest @relation(fields: [feedbackRequestId], references: [id], onDelete: Cascade)
+
+  // A user can vote only once for a feedback request
+  @@unique([userId, feedbackRequestId])
+  @@index([feedbackRequestId])
+  @@index([userId])
+  @@map("votes")
+}
+
+// ─────────────────────────────────────────────
+// COMMENT
+// ─────────────────────────────────────────────
+
+model Comment {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+
+  authorId          String @db.ObjectId
+  feedbackRequestId String @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  author          User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  feedbackRequest FeedbackRequest @relation(fields: [feedbackRequestId], references: [id], onDelete: Cascade)
+
+  @@index([feedbackRequestId, createdAt])
+  @@index([authorId])
+  @@map("comments")
+}
+
+// ─────────────────────────────────────────────
+// APPLICATION SETTINGS
+// ─────────────────────────────────────────────
+
+model AppSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  registrationPolicy RegistrationPolicy @default(OPEN)
+
+  commentsRequireApproval Boolean @default(false)
+
+  submissionRateLimit Int @default(10)
+
+  // Feature flag
+  enableVoting Boolean @default(true)
+
+  // Additional feature flags can be stored here
+  enableComments Boolean @default(true)
+
+  updatedAt DateTime @updatedAt
+
+  @@map("app_settings")
+}
+
+// ─────────────────────────────────────────────
+// REGISTRATION DOMAIN
+// ─────────────────────────────────────────────
+
+model AllowedEmailDomain {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  domain String  @unique
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("allowed_email_domains")
+}
+

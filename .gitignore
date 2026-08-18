@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build & Turbo outputs
+dist/
+.turbo/
+server/server.js
+
+# Environment variables
+.env
+.env.local
+
+# Logs & temp
+*.log
+logs/

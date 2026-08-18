@@ -1,0 +1,25 @@
+{
+  "name": "feedbackhub-monorepo",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:client": "bun --filter client dev",
+    "dev:server": "bun --filter server dev",
+    "build": "turbo build",
+    "build:client": "bun --filter client build",
+    "build:server": "bun --filter server build",
+    "test": "turbo test",
+    "db:seed": "turbo db:seed",
+    "db:push": "turbo db:push",
+    "db:generate": "turbo db:generate",
+    "db:studio": "turbo db:studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.0"
+  },
+  "packageManager": "bun@1.3.5"
+}
