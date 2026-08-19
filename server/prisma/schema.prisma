@@ -92,18 +92,18 @@ model Category {
 model Vote {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  accountId         String @db.ObjectId
   feedbackRequestId String @db.ObjectId
+  authorId          String @db.ObjectId
 
   createdAt DateTime @default(now())
 
-  user            Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
   feedbackRequest FeedbackRequest @relation(fields: [feedbackRequestId], references: [id], onDelete: Cascade)
+  author          Account         @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
   // A user can vote only once for a feedback request
-  @@unique([accountId, feedbackRequestId])
-  @@index([feedbackRequestId])
-  @@index([accountId])
+  @@index([feedbackRequestId, createdAt])  
+  @@index([authorId])
+
   @@map("votes")
 }
 
