@@ -43,22 +43,20 @@ model FeedbackRequest {
 
   authorId   String @db.ObjectId
   categoryId String @db.ObjectId
-  statusId   String @db.ObjectId
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  status    Int      @default(0) //0- New, 1- Under Review, 2- Planned, In Progress, 3- Done, 4- Declined
 
   // Relations
   author   Account  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  status   Status   @relation(fields: [statusId], references: [id], onDelete: Restrict)
 
   votes    Vote[]
   comments Comment[]
 
   @@index([authorId])
   @@index([categoryId])
-  @@index([statusId])
   @@index([createdAt])
   @@index([updatedAt])
   @@index([pinned])
@@ -85,31 +83,6 @@ model Category {
   @@unique([name])
   @@index([isActive])
   @@map("categories")
-}
-
-// ─────────────────────────────────────────────
-// STATUS
-// ─────────────────────────────────────────────
-
-model Status {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String?
-
-  // Controls ordering in the UI
-  position Int @default(0)
-
-  isActive Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  feedbackRequests FeedbackRequest[]
-
-  @@unique([name])
-  @@index([isActive])
-  @@index([position])
-  @@map("statuses")
 }
 
 // ─────────────────────────────────────────────

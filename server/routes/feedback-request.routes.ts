@@ -1,28 +1,54 @@
-import { request, Router } from 'express'
 import {
+  changeFeedbackRequestStatus,
   createFeedbackRequest,
-  removeFeedbackRequest,
   editFeedbackRequest,
   getFeedbackRequest,
   getFeedbackRequests,
+  getMyFeedbackRequests,
+  pinFeedbackRequest,
+  removeFeedbackRequest,
 } from '../controllers/feedback-request.controller'
-import { validate } from '../middleware/validation.middleware'
+import { validate, validateQuery } from '../middleware/validation.middleware'
+import verifyToken, {
+  verifyAdmin,
+} from '../middleware/verifyToken.middleware'
 import {
+  changeFeedbackRequestStatusSchema,
   createFeedbackRequestSchema,
   editFeedbackRequestSchema,
+  listFeedbackRequestsQuerySchema,
+  pinFeedbackRequestSchema,
 } from '../validations/feedback-request.schemas'
+import { Router } from 'express'
 
 const feedbackRequestRoutes = Router()
 
+
 feedbackRequestRoutes
   .route('/')
-  .get(getFeedbackRequests)
+  .get(validateQuery(listFeedbackRequestsQuerySchema), getFeedbackRequests)
   .post(validate(createFeedbackRequestSchema), createFeedbackRequest)
-  .patch(validate(editFeedbackRequestSchema), editFeedbackRequest)
+
+feedbackRequestRoutes
+  .route('/mine')
+  .get(validateQuery(listFeedbackRequestsQuerySchema), getMyFeedbackRequests)
+
+feedbackRequestRoutes
+  .route('/:id/status')
+  .patch(
+    verifyAdmin,
+    validate(changeFeedbackRequestStatusSchema),
+    changeFeedbackRequestStatus,
+  )
+
+feedbackRequestRoutes
+  .route('/:id/pin')
+  .patch(verifyAdmin, validate(pinFeedbackRequestSchema), pinFeedbackRequest)
 
 feedbackRequestRoutes
   .route('/:id')
-  .delete(removeFeedbackRequest)
   .get(getFeedbackRequest)
+  .patch(validate(editFeedbackRequestSchema), editFeedbackRequest)
+  .delete(removeFeedbackRequest)
 
 export default feedbackRequestRoutes

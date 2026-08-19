@@ -12,7 +12,10 @@ export default async function verifyToken(
   try {
     const token = getToken(req);
 
-    jwt.verify(token!, process.env.SECRET!, async (err, decoded) => {
+    jwt.verify(
+      token!,
+      process.env.SECRET!,
+      async (err: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
       if (err) {
         return clientErrorResponse({
           res,
@@ -37,6 +40,27 @@ export default async function verifyToken(
         return next();
       }
     });
+  } catch (err) {
+    return serverErrorResponse({ res, err, req });
+  }
+}
+
+export async function verifyAdmin(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<any> {
+  try {
+    if (!req.account || req.account.role !== 0) {
+      return clientErrorResponse({
+        res,
+        req,
+        message: "NO_PERMISSIONS",
+        status: 403,
+      });
+    }
+
+    return next();
   } catch (err) {
     return serverErrorResponse({ res, err, req });
   }

@@ -115,6 +115,8 @@ export const RESPONSES = {
     REGISTRATION_SUCCESSFUL:
       'You have been registered successfully , please check your email for verification code',
     LOGOUT_SUCCESS: 'Logged out successfully',
+    RATE_LIMIT_EXCEEDED:
+      'You have reached the feedback submission limit. Please try again later',
   },
   ar: {
     NO_PERMISSIONS_MESSAGE: 'ليس لديك صلاحية',
@@ -167,5 +169,7 @@ export const RESPONSES = {
     REGISTRATION_SUCCESSFUL:
       'تم تسجيلك بنجاح، يرجى التحقق من بريدك الإلكتروني لإكمال التسجيل',
     LOGOUT_SUCCESS: 'تم تسجيل الخروج بنجاح',
+    RATE_LIMIT_EXCEEDED:
+      'لقد وصلت إلى حد إرسال الملاحظات. يرجى المحاولة لاحقاً',
   },
 }
