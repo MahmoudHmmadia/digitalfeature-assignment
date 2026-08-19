@@ -6,7 +6,7 @@ import {
 } from "../utils/responses";
 
 import { prisma } from "@/utils/prisma";
-import { imagesUrl, paginate } from "@/utils/lib";
+import { deleteFile, imagesUrl, paginate } from "@/utils/lib";
 import {
   EditMyAccountDto,
   ToggleAccountSuspendedDto,
@@ -41,6 +41,12 @@ export async function editMyAccount(req: Request, res: Response) {
           : account.avatarUrl,
       },
     });
+
+    if (req.file && account.avatarUrl)
+      deleteFile({
+        dirName: "accounts",
+        url: account.avatarUrl,
+      });
 
     return successResponse({
       res,

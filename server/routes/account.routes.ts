@@ -10,13 +10,14 @@ import {
   toggleAccountSuspended,
 } from "@/controllers/account.controller";
 import { verifyAdmin } from "@/middleware/verifyToken.middleware";
+import { createMulter } from "@/utils/lib";
 
 const accountRoutes = Router();
-
+const multer = createMulter({ dir: "accounts" });
 accountRoutes
   .route("/")
   .get(verifyAdmin, getAccounts)
-  .patch(validate(editMyAccountSchema), editMyAccount);
+  .patch(multer.single("avatar"), validate(editMyAccountSchema), editMyAccount);
 
 accountRoutes
   .route("/toggle-suspended")

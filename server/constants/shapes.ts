@@ -17,6 +17,10 @@ export const PUBLIC_ACCOUNT_SHAPE = {
   name: true,
   avatarUrl: true,
   slug: true,
+  isSuspended: true,
+  createdAt: true,
+  updatedAt: true,
+  lastLogin: true,
 } as const;
 
 export const ADMIN_ROLE = 0;
