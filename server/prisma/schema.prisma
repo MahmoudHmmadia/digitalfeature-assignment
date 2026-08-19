@@ -8,57 +8,26 @@ datasource db {
 }
 
 model Account {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String?  @unique
-  password  String?
-  token     String?
-  role      Int      @default(0) // 0 ADMIN - 1 USER
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-enum UserRole {
-  USER
-  ADMIN
-}
-
-enum Theme {
-  LIGHT
-  DARK
-  SYSTEM
-}
-
-enum RegistrationPolicy {
-  OPEN
-  INVITE_ONLY
-  RESTRICTED_DOMAINS
-}
-
-model User {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  email     String  @unique
-  name      String?
-  avatarUrl String?
-
-  role UserRole @default(USER)
-
-  theme    Theme  @default(SYSTEM)
-  language String @default("en")
-
-  emailNotifications       Boolean @default(true)
-  notifyOnMyRequestComment Boolean @default(true)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
+  id               String            @id @default(auto()) @map("_id") @db.ObjectId
+  email            String            @unique
+  password         String
+  name             String
+  avatarUrl        String?
+  token            String?
+  fcmToken         String?
+  slug             String?
+  role             Int               @default(0) // 0 ADMIN - 1 USER
+  isDeleted        Boolean           @default(false)
+  isSuspended      Boolean           @default(false)
+  isEmailVerified  Boolean           @default(false)
+  code             String?           @default("000000") //for dev 000000
+  codeExpiry       DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  lastLogin        DateTime?
   feedbackRequests FeedbackRequest[]
   votes            Vote[]
   comments         Comment[]
-
-  @@index([role])
-  @@index([createdAt])
-  @@map("users")
 }
 
 // ─────────────────────────────────────────────
@@ -80,7 +49,7 @@ model FeedbackRequest {
   updatedAt DateTime @updatedAt
 
   // Relations
-  author   User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author   Account  @relation(fields: [authorId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   status   Status   @relation(fields: [statusId], references: [id], onDelete: Restrict)
 
@@ -150,18 +119,18 @@ model Status {
 model Vote {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  userId            String @db.ObjectId
+  accountId         String @db.ObjectId
   feedbackRequestId String @db.ObjectId
 
   createdAt DateTime @default(now())
 
-  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
   feedbackRequest FeedbackRequest @relation(fields: [feedbackRequestId], references: [id], onDelete: Cascade)
 
   // A user can vote only once for a feedback request
-  @@unique([userId, feedbackRequestId])
+  @@unique([accountId, feedbackRequestId])
   @@index([feedbackRequestId])
-  @@index([userId])
+  @@index([accountId])
   @@map("votes")
 }
 
@@ -179,7 +148,7 @@ model Comment {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  author          User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author          Account         @relation(fields: [authorId], references: [id], onDelete: Cascade)
   feedbackRequest FeedbackRequest @relation(fields: [feedbackRequestId], references: [id], onDelete: Cascade)
 
   @@index([feedbackRequestId, createdAt])
@@ -193,8 +162,6 @@ model Comment {
 
 model AppSettings {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  registrationPolicy RegistrationPolicy @default(OPEN)
 
   commentsRequireApproval Boolean @default(false)
 
@@ -216,8 +183,8 @@ model AppSettings {
 // ─────────────────────────────────────────────
 
 model AllowedEmailDomain {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
-  domain String  @unique
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  domain   String  @unique
   isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
@@ -225,4 +192,3 @@ model AllowedEmailDomain {
 
   @@map("allowed_email_domains")
 }
-

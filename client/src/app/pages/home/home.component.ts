@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { accountInfo } from '../../context/global';
@@ -44,7 +45,7 @@ import {
               </app-custom-button>
 
               <app-custom-button
-                danger="true"
+                [danger]="true"
                 (click)="logout()"
               >
                 Logout

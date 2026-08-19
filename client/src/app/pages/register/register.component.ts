@@ -11,10 +11,10 @@ import { CustomInputComponent } from '../../components/custom-input.component';
 import { PasswordInputComponent } from '../../components/password-input.component';
 import { DividerComponent } from '../../components/divider.component';
 import { SocialButtonComponent } from '../../components/social-button.component';
-import { LoginService } from './login.service';
+import { RegisterService } from './register.service';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -26,17 +26,33 @@ import { LoginService } from './login.service';
     DividerComponent,
     SocialButtonComponent,
   ],
-  providers: [LoginService],
+  providers: [RegisterService],
   template: `
     <app-auth-container
-      title="Welcome back"
-      subtitle="Sign in to your FeedbackHub account"
+      title="Create account"
+      subtitle="Get started with FeedbackHub"
     >
       <form
         class="flex flex-col gap-4"
         [formGroup]="svc.form"
         (ngSubmit)="svc.submit()"
       >
+        <div class="grid grid-cols-2 gap-3">
+          <app-custom-input
+            label="First name"
+            placeholder="John"
+            formControlName="firstName"
+            [error]="svc.errors()['firstName'] ?? ''"
+          />
+
+          <app-custom-input
+            label="Last name"
+            placeholder="Doe"
+            formControlName="lastName"
+            [error]="svc.errors()['lastName'] ?? ''"
+          />
+        </div>
+
         <app-custom-input
           label="Email"
           type="email"
@@ -45,27 +61,26 @@ import { LoginService } from './login.service';
           [error]="svc.errors()['email'] ?? ''"
         />
 
-        <div class="grid gap-1.5">
-          <app-password-input
-            label="Password"
-            formControlName="password"
-            [error]="svc.errors()['password'] ?? ''"
-          />
+        <app-password-input
+          label="Password"
+          formControlName="password"
+          [showStrength]="true"
+          [error]="svc.errors()['password'] ?? ''"
+        />
 
-          <a
-            routerLink="/forgot-password"
-            class="justify-self-end text-xs font-medium text-primary hover:underline"
-          >
-            Forgot password?
-          </a>
-        </div>
+        <app-password-input
+          label="Confirm password"
+          placeholder="••••••••"
+          formControlName="confirmPassword"
+          [error]="svc.errors()['confirmPassword'] ?? ''"
+        />
 
         <app-custom-button
           type="submit"
           [loading]="svc.loading()"
           className="w-full mt-1"
         >
-          Sign in
+          Create account
         </app-custom-button>
       </form>
 
@@ -76,15 +91,15 @@ import { LoginService } from './login.service';
       </app-social-button>
 
       <p class="mt-4 text-center text-sm text-muted-foreground">
-        Don't have an account?
-        <a routerLink="/register" class="font-medium text-primary hover:underline">
-          Create account
+        Already have an account?
+        <a routerLink="/login" class="font-medium text-primary hover:underline">
+          Sign in
         </a>
       </p>
     </app-auth-container>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LoginComponent {
-  readonly svc = inject(LoginService);
+export class RegisterComponent {
+  readonly svc = inject(RegisterService);
 }

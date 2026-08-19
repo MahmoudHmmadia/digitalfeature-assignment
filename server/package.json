@@ -36,6 +36,7 @@
     "multer": "latest",
     "nodemailer": "latest",
     "rotating-file-stream": "latest",
+    "swagger-ui-express": "latest",
     "uuid": "latest"
   },
   "devDependencies": {
@@ -46,6 +47,7 @@
     "@types/morgan": "latest",
     "@types/multer": "latest",
     "@types/nodemailer": "latest",
+    "@types/swagger-ui-express": "latest",
     "@types/uuid": "latest",
     "esbuild": "latest",
     "prisma": "6.19.0",

@@ -1,25 +1,8 @@
 import { Routes } from '@angular/router';
-import { isAuthenticated } from '../context/global';
+import { privateRoutes } from './private.routes';
+import { publicRoutes } from './public.routes';
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('../pages/login/login.component').then(
-        (m) => m.LoginComponent,
-      ),
-    canActivate: [() => !isAuthenticated()],
-  },
-  {
-    path: '',
-    loadComponent: () =>
-      import('../pages/home/home.component').then(
-        (m) => m.HomeComponent,
-      ),
-    canActivate: [() => isAuthenticated()],
-  },
-  {
-    path: '**',
-    redirectTo: '',
-  },
+  ...publicRoutes,
+  ...privateRoutes,
 ];

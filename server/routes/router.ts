@@ -1,10 +1,14 @@
-import { Express } from "express";
+import { Express, Request, Response } from "express";
+import { API_PREFIX } from "../config/swagger.config";
+import authRoutes from "./auth.routes";
+
+function health(_req: Request, res: Response) {
+  res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
+}
 
 export default function router(server: Express) {
-  server.get("/health", (req, res) => {
-    res.status(200).json({ status: "OK", timestamp: new Date().toISOString() });
-  });
+  server.get("/health", health);
+  server.get(`${API_PREFIX}/health`, health);
 
-  // Add your routes here
-  // Example: server.use("/api/users", userRoutes);
+  server.use(`${API_PREFIX}/auth`, authRoutes);
 }

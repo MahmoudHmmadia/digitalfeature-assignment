@@ -22,7 +22,9 @@ async function seedAdmin() {
         data: {
           email,
           password: hashedPassword,
+          name: process.env.ADMIN_NAME ?? "Admin",
           role: 0,
+          isEmailVerified: true,
         },
       });
       console.log(`Admin account seeded successfully: ${email}`);

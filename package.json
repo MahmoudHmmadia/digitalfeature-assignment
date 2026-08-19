@@ -7,10 +7,10 @@
   ],
   "scripts": {
     "dev": "turbo dev",
-    "dev:client": "bun --filter client dev",
+    "dev:client": "bun --filter feedbackhub-frontend dev",
     "dev:server": "bun --filter server dev",
     "build": "turbo build",
-    "build:client": "bun --filter client build",
+    "build:client": "bun --filter feedbackhub-frontend build",
     "build:server": "bun --filter server build",
     "test": "turbo test",
     "db:seed": "turbo db:seed",

@@ -15,7 +15,7 @@ export const authInterceptor: HttpInterceptorFn = (
   };
 
   if (account?.token) {
-    headers.Authorization = `Bearer ${account.token}`;
+    headers['Authorization'] = `Bearer ${account.token}`;
   }
 
   return next(
