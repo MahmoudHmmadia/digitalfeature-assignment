@@ -65,7 +65,12 @@ export async function getAdminAnalytics(req: Request, res: Response) {
 
 export async function getAdminCategories(req: Request, res: Response) {
   try {
-    const { search, active, sortBy = "name", sortOrder = "asc" } = req.query as {
+    const {
+      search,
+      active,
+      sortBy = "name",
+      sortOrder = "asc",
+    } = req.query as {
       search?: string;
       active?: boolean;
       sortBy?: "name" | "createdAt" | "updatedAt";
@@ -149,8 +154,17 @@ export async function updateAdminCategory(req: Request, res: Response) {
 export async function deleteAdminCategory(req: Request, res: Response) {
   try {
     const id = String(req.params.id);
-    const relatedFeedback = await prisma.feedbackRequest.count({ where: { categoryId: id } });
-    if (relatedFeedback > 0) return clientErrorResponse({ req, res, message: "CATEGORY_IN_USE", status: 409, data: { feedbackCount: relatedFeedback } });
+    const relatedFeedback = await prisma.feedbackRequest.count({
+      where: { categoryId: id },
+    });
+    if (relatedFeedback > 0)
+      return clientErrorResponse({
+        req,
+        res,
+        message: "CATEGORY_IN_USE",
+        status: 409,
+        data: { feedbackCount: relatedFeedback },
+      });
     const category = await prisma.category.delete({
       where: { id },
     });
@@ -186,14 +200,19 @@ export async function getAppSettings(req: Request, res: Response) {
 export async function updateAppSettings(req: Request, res: Response) {
   try {
     const existing = await prisma.appSettings.findFirst();
-    const enablingMaintenance = req.body.maintenanceMode === true && existing?.maintenanceMode !== true;
+    const enablingMaintenance =
+      req.body.maintenanceMode === true && existing?.maintenanceMode !== true;
     const settings = existing
       ? await prisma.appSettings.update({
           where: { id: existing.id },
           data: req.body,
         })
       : await prisma.appSettings.create({ data: req.body });
-    if (enablingMaintenance) await prisma.account.updateMany({ where: { role: 1 }, data: { token: null, fcmToken: null } });
+    if (enablingMaintenance)
+      await prisma.account.updateMany({
+        where: { role: 1 },
+        data: { token: null, fcmToken: null },
+      });
     return successResponse({
       req,
       res,

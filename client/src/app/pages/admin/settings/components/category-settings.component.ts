@@ -11,12 +11,21 @@ import type { FeedbackCategory } from "../../../../types/feedback";
 import { InputComponent } from "../../../../components/ui/input.component";
 import { ButtonComponent } from "../../../../components/ui/button.component";
 import { ConfirmationDialogComponent } from "../../../../components/confirmation-dialog.component";
-import { FilterComponent, type FilterResult } from '../../../../components/ui/filter.component';
-import { PaginationComponent } from '../../../../components/ui/pagination.component';
+import {
+  FilterComponent,
+  type FilterResult,
+} from "../../../../components/ui/filter.component";
+import { PaginationComponent } from "../../../../components/ui/pagination.component";
 @Component({
   selector: "app-category-settings",
   standalone: true,
-  imports: [InputComponent, ButtonComponent, ConfirmationDialogComponent, FilterComponent, PaginationComponent],
+  imports: [
+    InputComponent,
+    ButtonComponent,
+    ConfirmationDialogComponent,
+    FilterComponent,
+    PaginationComponent,
+  ],
   template: `<div
       class="grid gap-4 lg:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.2fr)]"
     >
@@ -61,9 +70,20 @@ import { PaginationComponent } from '../../../../components/ui/pagination.compon
               )
             }}
           </p>
-          <app-filter class="mt-4 block" searchPlaceholder="Search categories" selectLabel="Sort categories" [options]="sortOptions" defaultValue="name-asc" (apply)="filter($event)" />
+          <app-filter
+            class="mt-4 block"
+            searchPlaceholder="Search categories"
+            selectLabel="Sort categories"
+            [options]="sortOptions"
+            defaultValue="name-asc"
+            (apply)="filter($event)"
+          />
         </div>
-        @if (svc.operationError()) { <p class="border-b bg-red-50 px-5 py-3 text-sm text-red-700">{{ t.text(svc.operationError()) }}</p> }
+        @if (svc.operationError()) {
+          <p class="border-b bg-red-50 px-5 py-3 text-sm text-red-700">
+            {{ t.text(svc.operationError()) }}
+          </p>
+        }
         @if (svc.loading()) {
           <p class="p-6 text-sm text-slate-500">{{ t.text("Loading…") }}</p>
         } @else if (!svc.categories().length) {
@@ -94,7 +114,13 @@ import { PaginationComponent } from '../../../../components/ui/pagination.compon
             </article>
           }
         }
-        <app-pagination [page]="svc.page()" [pages]="svc.pages()" [total]="svc.total()" itemLabel="categories" (pageChange)="svc.goToCategoryPage($event)" />
+        <app-pagination
+          [page]="svc.page()"
+          [pages]="svc.pages()"
+          [total]="svc.total()"
+          itemLabel="categories"
+          (pageChange)="svc.goToCategoryPage($event)"
+        />
       </section>
     </div>
     <app-confirmation-dialog
@@ -116,7 +142,12 @@ export class CategorySettingsComponent implements OnInit {
   readonly description = signal("");
   readonly editing = signal<FeedbackCategory | null>(null);
   readonly removing = signal<FeedbackCategory | null>(null);
-  readonly sortOptions = [{ value: 'name-asc', label: 'Name: A to Z' }, { value: 'name-desc', label: 'Name: Z to A' }, { value: 'createdAt-desc', label: 'Newest' }, { value: 'createdAt-asc', label: 'Oldest' }] as const;
+  readonly sortOptions = [
+    { value: "name-asc", label: "Name: A to Z" },
+    { value: "name-desc", label: "Name: Z to A" },
+    { value: "createdAt-desc", label: "Newest" },
+    { value: "createdAt-asc", label: "Oldest" },
+  ] as const;
   ngOnInit(): void {
     void this.svc.loadCategories();
   }
@@ -132,25 +163,26 @@ export class CategorySettingsComponent implements OnInit {
   }
   async submit(): Promise<void> {
     const item = this.editing();
-    if (item)
-      await this.svc.updateCategory(
+    const saved = item
+      ? await this.svc.updateCategory(
         item.id,
         this.name().trim(),
         this.description().trim(),
-      );
-    else
-      await this.svc.createCategory(
+      )
+      : await this.svc.createCategory(
         this.name().trim(),
         this.description().trim(),
       );
-    this.reset();
+    if (saved) this.reset();
   }
   async remove(): Promise<void> {
     const item = this.removing();
     if (!item) return;
-    await this.svc.deleteCategory(item.id);
+    const deleted = await this.svc.deleteCategory(item.id);
     this.removing.set(null);
-    if (this.editing()?.id === item.id) this.reset();
+    if (deleted && this.editing()?.id === item.id) this.reset();
   }
-  filter(result: FilterResult): void { this.svc.applyCategoryFilters(result.search, result.value); }
+  filter(result: FilterResult): void {
+    this.svc.applyCategoryFilters(result.search, result.value);
+  }
 }
