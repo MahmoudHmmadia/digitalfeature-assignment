@@ -8,13 +8,14 @@ import {
   requestNewCode,
   resetPassword,
 } from "../controllers/auth.controller";
-import { validate } from "../middleware/validation.middleware";
+import { validate, validateQuery } from "../middleware/validation.middleware";
 import {
   loginSchema,
   newOtpSchema,
   registerSchema,
   resetPasswordSchema,
   verifyOtpSchema,
+  locationQuerySchema,
 } from "../validations/auth.schemas";
 import verifyToken from "@/middleware/verifyToken.middleware";
 
@@ -65,7 +66,7 @@ authRoutes.route("/new-code").post(validate(newOtpSchema), requestNewCode);
  *     security:
  *       - bearerAuth: []
  */
-authRoutes.route("/location").get(getLocation);
+authRoutes.route("/location").get(validateQuery(locationQuerySchema), getLocation);
 
 /**
  * @openapi

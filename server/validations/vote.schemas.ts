@@ -3,9 +3,10 @@ import Joi from "joi";
 export type ToggleVoteDto = {
   feedbackRequestId: string;
 };
+export type ListVotesQueryDto = { feedbackRequestId?: string; mine?: boolean; page?: number; limit?: number; startIndex?: number };
 
 export const toggleVoteSchema = Joi.object({
-  feedbackRequestId: Joi.string().required(),
+  feedbackRequestId: Joi.string().hex().length(24).required(),
 });
 
 export const listVotesQuerySchema = Joi.object({

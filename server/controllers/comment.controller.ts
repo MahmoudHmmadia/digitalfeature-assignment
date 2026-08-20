@@ -7,6 +7,8 @@ import {
 import {
   CreateCommentDto,
   EditCommentDto,
+  ListCommentsQueryDto,
+  CommentIdParamsDto,
 } from "@/validations/comment.schemas";
 import { prisma } from "@/utils/prisma";
 import { paginate } from "@/utils/lib";
@@ -92,13 +94,13 @@ export async function editComment(req: Request, res: Response) {
 
 export async function getComments(req: Request, res: Response) {
   try {
-    const { feedbackRequestId, mine } = req.query;
+    const { feedbackRequestId, mine } = req.query as ListCommentsQueryDto;
 
     const where: { feedbackRequestId?: string; authorId?: string } = {};
 
     if (feedbackRequestId)
-      where.feedbackRequestId = feedbackRequestId as string;
-    if (String(mine) === "true") where.authorId = req.account!.id;
+      where.feedbackRequestId = feedbackRequestId;
+    if (mine) where.authorId = req.account!.id;
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,
@@ -123,10 +125,10 @@ export async function getComments(req: Request, res: Response) {
 
 export async function removeComment(req: Request, res: Response) {
   try {
-    const { id } = req.params;
+    const { id } = req.params as CommentIdParamsDto;
     const comment = await prisma.comment.findUnique({
       where: {
-        id: id as string,
+        id,
       },
     });
 
@@ -146,7 +148,7 @@ export async function removeComment(req: Request, res: Response) {
 
     await prisma.comment.delete({
       where: {
-        id: id as string,
+        id,
       },
     });
 

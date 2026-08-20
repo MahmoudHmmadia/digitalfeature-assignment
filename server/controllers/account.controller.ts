@@ -11,6 +11,8 @@ import {
   EditMyAccountDto,
   ToggleAccountSuspendedDto,
   SetAccountDeletedDto,
+  AccountIdParamsDto,
+  ListAccountsQueryDto,
 } from "@/validations/account.schemas";
 import { PUBLIC_ACCOUNT_SHAPE } from "@/constants/shapes";
 
@@ -125,8 +127,9 @@ export async function setAccountDeleted(req: Request, res: Response) {
   try {
     const { isDeleted } = req.body as SetAccountDeletedDto;
 
+    const { id } = req.params as AccountIdParamsDto;
     const account = await prisma.account.findFirst({
-      where: { id: String(req.params.id), role: 1 },
+      where: { id, role: 1 },
     });
 
     if (!account)
@@ -152,12 +155,7 @@ export async function setAccountDeleted(req: Request, res: Response) {
 
 export async function getAccounts(req: Request, res: Response) {
   try {
-    const { name, email, isSuspended, isDeleted } = req.query as {
-      name?: any;
-      email?: string;
-      isSuspended?: string;
-      isDeleted?: string;
-    };
+    const { name, email, isSuspended, isDeleted } = req.query as ListAccountsQueryDto;
     const where: {
       name?: any;
       email?: any;
@@ -168,8 +166,8 @@ export async function getAccounts(req: Request, res: Response) {
 
     if (name) where.name = { contains: name, mode: "insensitive" };
     if (email) where.email = { contains: email, mode: "insensitive" };
-    if (isSuspended) where.isSuspended = isSuspended === "true";
-    if (isDeleted) where.isDeleted = isDeleted === "true";
+    if (typeof isSuspended === "boolean") where.isSuspended = isSuspended;
+    if (typeof isDeleted === "boolean") where.isDeleted = isDeleted;
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,

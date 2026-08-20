@@ -8,7 +8,7 @@ import {
   pinFeedbackRequest,
   removeFeedbackRequest,
 } from "../controllers/feedback-request.controller";
-import { validate, validateQuery } from "../middleware/validation.middleware";
+import { validate, validateParams, validateQuery } from "../middleware/validation.middleware";
 import verifyToken, { verifyAdmin } from "../middleware/verifyToken.middleware";
 import {
   changeFeedbackRequestStatusSchema,
@@ -16,6 +16,7 @@ import {
   editFeedbackRequestSchema,
   listFeedbackRequestsQuerySchema,
   pinFeedbackRequestSchema,
+  feedbackRequestIdParamsSchema,
 } from "../validations/feedback-request.schemas";
 import { Router } from "express";
 
@@ -34,18 +35,19 @@ feedbackRequestRoutes
   .route("/:id/status")
   .patch(
     verifyAdmin,
+    validateParams(feedbackRequestIdParamsSchema),
     validate(changeFeedbackRequestStatusSchema),
     changeFeedbackRequestStatus,
   );
 
 feedbackRequestRoutes
   .route("/:id/pin")
-  .patch(verifyAdmin, validate(pinFeedbackRequestSchema), pinFeedbackRequest);
+  .patch(verifyAdmin, validateParams(feedbackRequestIdParamsSchema), validate(pinFeedbackRequestSchema), pinFeedbackRequest);
 
 feedbackRequestRoutes
   .route("/:id")
-  .get(getFeedbackRequest)
-  .patch(validate(editFeedbackRequestSchema), editFeedbackRequest)
-  .delete(removeFeedbackRequest);
+  .get(validateParams(feedbackRequestIdParamsSchema), getFeedbackRequest)
+  .patch(validateParams(feedbackRequestIdParamsSchema), validate(editFeedbackRequestSchema), editFeedbackRequest)
+  .delete(validateParams(feedbackRequestIdParamsSchema), removeFeedbackRequest);
 
 export default feedbackRequestRoutes;

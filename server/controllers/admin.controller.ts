@@ -6,6 +6,7 @@ import {
   successResponse,
 } from "@/utils/responses";
 import { paginate } from "@/utils/lib";
+import type { AdminCategoryListQueryDto, AppSettingsUpdateDto, CategoryIdParamsDto, CreateCategoryDto, UpdateCategoryDto } from "@/validations/admin.schemas";
 
 export async function getAdminAnalytics(req: Request, res: Response) {
   try {
@@ -70,12 +71,7 @@ export async function getAdminCategories(req: Request, res: Response) {
       active,
       sortBy = "name",
       sortOrder = "asc",
-    } = req.query as {
-      search?: string;
-      active?: boolean;
-      sortBy?: "name" | "createdAt" | "updatedAt";
-      sortOrder?: "asc" | "desc";
-    };
+    } = req.query as AdminCategoryListQueryDto;
     const result = await paginate({
       req,
       prismaModel: prisma.category,
@@ -93,8 +89,9 @@ export async function getAdminCategories(req: Request, res: Response) {
 
 export async function createAdminCategory(req: Request, res: Response) {
   try {
+    const body = req.body as CreateCategoryDto;
     const category = await prisma.category.create({
-      data: { ...req.body, description: req.body.description || null },
+      data: { ...body, description: body.description || null },
     });
     return successResponse({
       req,
@@ -117,12 +114,14 @@ export async function createAdminCategory(req: Request, res: Response) {
 
 export async function updateAdminCategory(req: Request, res: Response) {
   try {
+    const body = req.body as UpdateCategoryDto;
+    const { id } = req.params as CategoryIdParamsDto;
     const category = await prisma.category.update({
-      where: { id: String(req.params.id) },
+      where: { id },
       data: {
-        ...req.body,
-        ...(req.body.description !== undefined
-          ? { description: req.body.description || null }
+        ...body,
+        ...(body.description !== undefined
+          ? { description: body.description || null }
           : {}),
       },
     });
@@ -153,7 +152,7 @@ export async function updateAdminCategory(req: Request, res: Response) {
 
 export async function deleteAdminCategory(req: Request, res: Response) {
   try {
-    const id = String(req.params.id);
+    const { id } = req.params as CategoryIdParamsDto;
     const relatedFeedback = await prisma.feedbackRequest.count({
       where: { categoryId: id },
     });
@@ -199,15 +198,16 @@ export async function getAppSettings(req: Request, res: Response) {
 
 export async function updateAppSettings(req: Request, res: Response) {
   try {
+    const body = req.body as AppSettingsUpdateDto;
     const existing = await prisma.appSettings.findFirst();
     const enablingMaintenance =
-      req.body.maintenanceMode === true && existing?.maintenanceMode !== true;
+      body.maintenanceMode === true && existing?.maintenanceMode !== true;
     const settings = existing
       ? await prisma.appSettings.update({
           where: { id: existing.id },
-          data: req.body,
+          data: body,
         })
-      : await prisma.appSettings.create({ data: req.body });
+      : await prisma.appSettings.create({ data: body });
     if (enablingMaintenance)
       await prisma.account.updateMany({
         where: { role: 1 },

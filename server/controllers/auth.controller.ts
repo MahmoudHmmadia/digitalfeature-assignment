@@ -4,8 +4,9 @@ import { sendOTP, verifyOTP } from "@/utils/otp";
 import { prisma } from "@/utils/prisma";
 import { generateUniqueSlug } from "@/utils/slug";
 import {
-  loginDto,
-  registerDto,
+  LoginDto,
+  RegisterDto,
+  LocationQueryDto,
   RequestNewCodeDto,
   ResetPasswordDto,
   VerifyOtpDto,
@@ -27,7 +28,7 @@ function normalizeEmail(email: string) {
   return email.trim().toLowerCase();
 }
 
-function buildDisplayName(body: registerDto) {
+function buildDisplayName(body: RegisterDto) {
   if (body.name?.trim()) return body.name.trim();
 
   return [body.firstName, body.lastName]
@@ -53,7 +54,7 @@ async function issueOtp(email: string) {
 
 export async function login(req: Request, res: Response) {
   try {
-    const { email, password, fcmToken } = req.body as loginDto;
+    const { email, password, fcmToken } = req.body as LoginDto;
     const normalizedEmail = normalizeEmail(email);
 
     const account = await prisma.account.findUnique({
@@ -112,7 +113,7 @@ export async function login(req: Request, res: Response) {
 
 export async function register(req: Request, res: Response) {
   try {
-    const body = req.body as registerDto;
+    const body = req.body as RegisterDto;
     const normalizedEmail = normalizeEmail(body.email);
     const displayName = buildDisplayName(body);
 
@@ -179,8 +180,7 @@ export async function register(req: Request, res: Response) {
 
 export async function getLocation(req: Request, res: Response) {
   try {
-    const query =
-      typeof req.query.query === "string" ? req.query.query.trim() : "";
+    const { query = "" } = req.query as LocationQueryDto;
 
     if (!query) {
       return clientErrorResponse({ message: "INVALID_DATA", res, req });

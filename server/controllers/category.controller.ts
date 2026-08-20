@@ -2,11 +2,11 @@ import type { Request, Response } from "express";
 import { prisma } from "../utils/prisma";
 import { serverErrorResponse, successResponse } from "../utils/responses";
 import { paginate } from "../utils/lib";
-import type { CategoryListQuery } from "../validations/category.schemas";
+import type { CategoryListQueryDto } from "../validations/category.schemas";
 
 export async function getCategories(req: Request, res: Response) {
   try {
-    const { search } = req.query as CategoryListQuery;
+    const { search } = req.query as CategoryListQueryDto;
     const { data, totalCount, pagesNumber } = await paginate({
       req,
       prismaModel: prisma.category,

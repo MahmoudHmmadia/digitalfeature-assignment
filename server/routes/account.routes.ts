@@ -1,9 +1,11 @@
 import { Router } from "express";
-import { validate } from "../middleware/validation.middleware";
+import { validate, validateParams, validateQuery } from "../middleware/validation.middleware";
 import {
   editMyAccountSchema,
   toggleAccountSuspendedSchema,
   setAccountDeletedSchema,
+  accountIdParamsSchema,
+  listAccountsQuerySchema,
 } from "@/validations/account.schemas";
 import {
   editMyAccount,
@@ -19,7 +21,7 @@ const accountRoutes = Router();
 const multer = createMulter({ dir: "accounts" });
 accountRoutes
   .route("/")
-  .get(verifyAdmin, getAccounts)
+  .get(verifyAdmin, validateQuery(listAccountsQuerySchema), getAccounts)
   .patch(multer.single("avatar"), validate(editMyAccountSchema), editMyAccount)
   .delete(removeMyAccount);
 
@@ -33,6 +35,6 @@ accountRoutes
 
 accountRoutes
   .route("/:id/deleted")
-  .patch(verifyAdmin, validate(setAccountDeletedSchema), setAccountDeleted);
+  .patch(verifyAdmin, validateParams(accountIdParamsSchema), validate(setAccountDeletedSchema), setAccountDeleted);
 
 export default accountRoutes;

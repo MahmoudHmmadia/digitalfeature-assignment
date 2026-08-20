@@ -6,8 +6,9 @@ import {
   ChangeFeedbackRequestStatusDto,
   CreateFeedbackRequestDto,
   EditFeedbackRequestDto,
-  ListFeedbackRequestsQuery,
+  ListFeedbackRequestsQueryDto,
   PinFeedbackRequestDto,
+  FeedbackRequestIdParamsDto,
 } from "@/validations/feedback-request.schemas";
 import {
   clientErrorResponse,
@@ -16,7 +17,7 @@ import {
 } from "../utils/responses";
 
 function requestId(req: Request) {
-  return String(req.params.id);
+  return (req.params as FeedbackRequestIdParamsDto).id;
 }
 
 const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
@@ -57,7 +58,7 @@ function serializeFeedbackRequest(item: FeedbackRequestRecord) {
 }
 
 function buildListQuery(
-  filters: ListFeedbackRequestsQuery,
+  filters: ListFeedbackRequestsQueryDto,
   authorIdOverride?: string,
 ) {
   const query: Record<string, unknown> = {};
@@ -79,7 +80,7 @@ function buildListQuery(
   return query;
 }
 
-function buildListOrderBy(filters: ListFeedbackRequestsQuery) {
+function buildListOrderBy(filters: ListFeedbackRequestsQueryDto) {
   const sortOrder = filters.sortOrder || "desc";
   const sortBy = filters.sortBy || "createdAt";
 
@@ -234,7 +235,7 @@ async function listFeedbackRequestsFor(
   authorIdOverride?: string,
   excludeAuthorId?: string,
 ) {
-  const filters = req.query as ListFeedbackRequestsQuery;
+  const filters = req.query as ListFeedbackRequestsQueryDto;
   const accountId = req.account!.id;
 
   const { data, pagesNumber, totalCount } = await paginate({

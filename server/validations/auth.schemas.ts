@@ -16,13 +16,13 @@ export const locationString = Joi.string().custom((value, helpers) => {
   return value;
 }, "JSON String Validation");
 
-export type loginDto = {
+export type LoginDto = {
   email: string;
   password: string;
   fcmToken?: string;
 };
 
-export type registerDto = {
+export type RegisterDto = {
   email: string;
   password: string;
   name?: string;
@@ -35,6 +35,7 @@ export type registerDto = {
     display_name?: string;
   };
 };
+export type LocationQueryDto = { query?: string };
 
 export const loginSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required(),
@@ -107,3 +108,4 @@ export const resetPasswordSchema = Joi.object({
   }),
   password: Joi.string().min(8).required(),
 });
+export const locationQuerySchema = Joi.object({ query: Joi.string().trim().allow('').max(200).optional() });

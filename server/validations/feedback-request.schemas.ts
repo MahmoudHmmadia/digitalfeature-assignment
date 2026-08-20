@@ -17,7 +17,8 @@ export type PinFeedbackRequestDto = {
   pinned: boolean;
 };
 
-export type ListFeedbackRequestsQuery = ListFeedbackRequestsContract;
+export type ListFeedbackRequestsQueryDto = ListFeedbackRequestsContract;
+export type FeedbackRequestIdParamsDto = { id: string };
 
 export const createFeedbackRequestSchema = Joi.object({
   title: Joi.string().trim().min(3).max(120).required(),
@@ -53,3 +54,4 @@ export const listFeedbackRequestsQuerySchema = Joi.object({
   limit: Joi.number().integer().min(1).max(100).optional(),
   startIndex: Joi.number().integer().min(0).optional(),
 });
+export const feedbackRequestIdParamsSchema = Joi.object({ id: objectId.required() });

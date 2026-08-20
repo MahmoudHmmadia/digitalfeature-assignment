@@ -8,7 +8,7 @@ import {
 import { prisma } from "@/utils/prisma";
 import { paginate } from "@/utils/lib";
 import { VOTE_SHAPE } from "@/constants/shapes";
-import { ToggleVoteDto } from "@/validations/vote.schemas";
+import { ListVotesQueryDto, ToggleVoteDto } from "@/validations/vote.schemas";
 
 export async function toggleVote(req: Request, res: Response) {
   try {
@@ -61,13 +61,13 @@ export async function toggleVote(req: Request, res: Response) {
 
 export async function getVotes(req: Request, res: Response) {
   try {
-    const { feedbackRequestId, mine } = req.query;
+    const { feedbackRequestId, mine } = req.query as ListVotesQueryDto;
 
     const where: { feedbackRequestId?: string; authorId?: string } = {};
 
     if (feedbackRequestId)
-      where.feedbackRequestId = feedbackRequestId as string;
-    if (String(mine) === "true") where.authorId = req.account!.id;
+      where.feedbackRequestId = feedbackRequestId;
+    if (mine) where.authorId = req.account!.id;
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,

@@ -1,5 +1,25 @@
 import Joi from "joi";
 import { categoryListQuerySchema } from "./category.schemas";
+export type AdminCategoryListQueryDto = {
+  search?: string;
+  active?: boolean;
+  sortBy?: "name" | "createdAt" | "updatedAt";
+  sortOrder?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+  startIndex?: number;
+};
+export type CreateCategoryDto = { name: string; description?: string };
+export type UpdateCategoryDto = {
+  name?: string;
+  description?: string;
+  isActive?: boolean;
+};
+export type AppSettingsUpdateDto = {
+  appVersion: string;
+  maintenanceMode: boolean;
+};
+export type CategoryIdParamsDto = { id: string };
 
 export const adminCategoryListQuerySchema = categoryListQuerySchema.keys({
   active: Joi.boolean().optional(),
@@ -21,4 +41,7 @@ export const categoryUpdateSchema = Joi.object({
 export const appSettingsUpdateSchema = Joi.object({
   appVersion: Joi.string().trim().min(1).max(30).required(),
   maintenanceMode: Joi.boolean().required(),
+});
+export const categoryIdParamsSchema = Joi.object({
+  id: Joi.string().hex().length(24).required(),
 });
