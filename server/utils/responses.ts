@@ -108,6 +108,7 @@ export const RESPONSES = {
     // System & General
     SERVER_ERROR: "Server error. Please try again later",
     MAINTENANCE_MODE: "System under maintenance. Please try again later",
+    CATEGORY_IN_USE: "This category cannot be deleted because it is used by feedback.",
     FAILED: "Operation failed",
 
     ACCOUNT_DELETED: "Account has been deleted, please contact support",
@@ -173,6 +174,7 @@ export const RESPONSES = {
     // System & General
     SERVER_ERROR: "خطأ في الخادم. يرجى المحاولة مرة أخرى لاحقًا",
     MAINTENANCE_MODE: "النظام قيد الصيانة. يرجى المحاولة مرة أخرى لاحقًا",
+    CATEGORY_IN_USE: "لا يمكن حذف هذا التصنيف لأنه مرتبط بملاحظات.",
     FAILED: "فشلت العملية",
 
     ACCOUNT_DELETED: "لقد تم حذف هذا الحساب، الرجاء التواصل مع الدعم الفني",

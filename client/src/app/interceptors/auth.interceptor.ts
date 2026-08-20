@@ -1,8 +1,5 @@
-import {
-  HttpInterceptorFn,
-  HttpRequest,
-} from '@angular/common/http';
-import { accountInfo, lang } from '../context/global';
+import { HttpInterceptorFn, HttpRequest } from "@angular/common/http";
+import { accountInfo, lang } from "../context/global";
 
 export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
@@ -11,11 +8,11 @@ export const authInterceptor: HttpInterceptorFn = (
   const account = accountInfo();
 
   const headers: Record<string, string> = {
-    'Accept-Language': lang(),
+    "Accept-Language": lang(),
   };
 
   if (account?.token) {
-    headers['Authorization'] = `Bearer ${account.token}`;
+    headers["Authorization"] = `Bearer ${account.token}`;
   }
 
   return next(

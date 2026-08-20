@@ -1,22 +1,18 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { Router } from '@angular/router';
-import { accountInfo } from '../../context/global';
-import { PageLayoutComponent } from '../../components/page-layout.component';
-import { CustomButtonComponent } from '../../components/custom-button.component';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { Router } from "@angular/router";
+import { accountInfo } from "../../context/global";
+import { PageLayoutComponent } from "../../components/page-layout.component";
+import { CustomButtonComponent } from "../../components/custom-button.component";
 import {
   CardComponent,
   CardContentComponent,
   CardDescriptionComponent,
   CardHeaderComponent,
   CardTitleComponent,
-} from '../../components/ui/card.component';
+} from "../../components/ui/card.component";
 
 @Component({
-  selector: 'app-home',
+  selector: "app-home",
   standalone: true,
   imports: [
     PageLayoutComponent,
@@ -40,14 +36,9 @@ import {
 
           <app-card-content>
             <div class="flex gap-2">
-              <app-custom-button>
-                Requests
-              </app-custom-button>
+              <app-custom-button> Requests </app-custom-button>
 
-              <app-custom-button
-                [danger]="true"
-                (click)="logout()"
-              >
+              <app-custom-button [danger]="true" (click)="logout()">
                 Logout
               </app-custom-button>
             </div>
@@ -63,6 +54,6 @@ export class HomeComponent {
 
   logout(): void {
     accountInfo.set(undefined);
-    void this.router.navigateByUrl('/login');
+    void this.router.navigateByUrl("/login");
   }
 }

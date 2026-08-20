@@ -1,11 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
-  selector: 'app-form-field',
+  selector: "app-form-field",
   standalone: true,
   template: `
     <div class="grid gap-1.5">
@@ -25,6 +21,6 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFieldComponent {
-  readonly label = input('');
-  readonly error = input('');
+  readonly label = input("");
+  readonly error = input("");
 }

@@ -136,15 +136,8 @@ model Comment {
 model AppSettings {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  commentsRequireApproval Boolean @default(false)
-
-  submissionRateLimit Int @default(10)
-
-  // Feature flag
-  enableVoting Boolean @default(true)
-
-  // Additional feature flags can be stored here
-  enableComments Boolean @default(true)
+  appVersion      String  @default("1.0.0")
+  maintenanceMode Boolean @default(false)
 
   updatedAt DateTime @updatedAt
 

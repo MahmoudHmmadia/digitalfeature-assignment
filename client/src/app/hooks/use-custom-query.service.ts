@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { QueryClient } from '@tanstack/angular-query-experimental';
-import { CallsService } from './use-calls.service';
+import { Injectable, inject } from "@angular/core";
+import { QueryClient } from "@tanstack/angular-query-experimental";
+import { CallsService } from "./use-calls.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class CustomQueryService {
   private readonly queryClient = inject(QueryClient);
   private readonly calls = inject(CallsService);

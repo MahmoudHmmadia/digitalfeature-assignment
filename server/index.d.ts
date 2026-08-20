@@ -1,17 +1,17 @@
-import type { Account } from '@prisma/client'
+import type { Account } from "@prisma/client";
 
-export {}
+export {};
 
 declare global {
   namespace Express {
     interface Request {
-      account?: Account
+      account?: Account;
     }
   }
 }
 
-declare module 'express-serve-static-core' {
+declare module "express-serve-static-core" {
   interface Request {
-    account?: Account
+    account?: Account;
   }
 }

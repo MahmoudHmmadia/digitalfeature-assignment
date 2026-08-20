@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
-import { accountInfo, lang } from '../context/global';
-import { myAxios } from './myAxios';
+import { Injectable } from "@angular/core";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import { accountInfo, lang } from "../context/global";
+import { myAxios } from "./myAxios";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class ApiService {
   async get<T>(
     url: string,
@@ -16,7 +16,7 @@ export class ApiService {
         Authorization: accountInfo()
           ? `Bearer ${accountInfo()?.token}`
           : undefined,
-        'Accept-Language': lang(),
+        "Accept-Language": lang(),
       },
     });
   }
@@ -33,7 +33,7 @@ export class ApiService {
         Authorization: accountInfo()
           ? `Bearer ${accountInfo()?.token}`
           : undefined,
-        'Accept-Language': lang(),
+        "Accept-Language": lang(),
       },
     });
   }
@@ -50,7 +50,24 @@ export class ApiService {
         Authorization: accountInfo()
           ? `Bearer ${accountInfo()?.token}`
           : undefined,
-        'Accept-Language': lang(),
+        "Accept-Language": lang(),
+      },
+    });
+  }
+
+  async patch<T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<T>> {
+    return myAxios.patch<T>(url, data, {
+      ...config,
+      headers: {
+        ...config?.headers,
+        Authorization: accountInfo()
+          ? `Bearer ${accountInfo()?.token}`
+          : undefined,
+        "Accept-Language": lang(),
       },
     });
   }
@@ -66,7 +83,7 @@ export class ApiService {
         Authorization: accountInfo()
           ? `Bearer ${accountInfo()?.token}`
           : undefined,
-        'Accept-Language': lang(),
+        "Accept-Language": lang(),
       },
     });
   }

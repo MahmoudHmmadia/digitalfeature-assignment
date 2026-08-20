@@ -18,6 +18,7 @@ export const PUBLIC_ACCOUNT_SHAPE = {
   avatarUrl: true,
   slug: true,
   isSuspended: true,
+  isDeleted: true,
   createdAt: true,
   updatedAt: true,
   lastLogin: true,
@@ -29,10 +30,30 @@ export const USER_ROLE = 1;
 export const COMMENT_SHAPE = {
   id: true,
   content: true,
-  author: PUBLIC_ACCOUNT_SHAPE,
+  feedbackRequestId: true,
+  authorId: true,
+  createdAt: true,
+  updatedAt: true,
+  author: { select: PUBLIC_ACCOUNT_SHAPE },
+  feedbackRequest: { select: { id: true, title: true } },
 };
 
 export const VOTE_SHAPE = {
   id: true,
-  author: PUBLIC_ACCOUNT_SHAPE,
+  feedbackRequestId: true,
+  authorId: true,
+  createdAt: true,
+  author: { select: PUBLIC_ACCOUNT_SHAPE },
+  feedbackRequest: {
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      status: true,
+      pinned: true,
+      createdAt: true,
+      category: true,
+      _count: { select: { votes: true, comments: true } },
+    },
+  },
 };

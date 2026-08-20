@@ -1,5 +1,5 @@
-import { signal, type Signal } from '@angular/core';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { signal, type Signal } from "@angular/core";
+import { Subject, debounceTime, distinctUntilChanged, takeUntil } from "rxjs";
 
 export class DebounceValue<T> {
   private readonly valueSignal = signal<T | undefined>(undefined);
@@ -7,10 +7,7 @@ export class DebounceValue<T> {
 
   readonly value: Signal<T | undefined> = this.valueSignal.asReadonly();
 
-  constructor(
-    initialValue: T,
-    delay = 400,
-  ) {
+  constructor(initialValue: T, delay = 400) {
     this.valueSignal.set(initialValue);
 
     const source$ = new Subject<T>();

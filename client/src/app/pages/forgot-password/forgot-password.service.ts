@@ -1,8 +1,8 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthApiService } from '../../api/auth.api';
-import { CustomMutationService } from '../../hooks/use-custom-mutation.service';
+import { Injectable, inject, signal, computed } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthApiService } from "../../api/auth.api";
+import { CustomMutationService } from "../../hooks/use-custom-mutation.service";
 
 @Injectable()
 export class ForgotPasswordService {
@@ -14,7 +14,7 @@ export class ForgotPasswordService {
   readonly loading = signal(false);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ["", [Validators.required, Validators.email]],
   });
 
   readonly errors = computed((): Record<string, string | undefined> => {
@@ -22,8 +22,9 @@ export class ForgotPasswordService {
     const result: Record<string, string | undefined> = {};
 
     if (c.email.touched && c.email.errors) {
-      if (c.email.errors['required']) result['email'] = 'Email is required';
-      else if (c.email.errors['email']) result['email'] = 'Please enter a valid email';
+      if (c.email.errors["required"]) result["email"] = "Email is required";
+      else if (c.email.errors["email"])
+        result["email"] = "Please enter a valid email";
     }
 
     return result;
@@ -44,7 +45,7 @@ export class ForgotPasswordService {
 
       this.mutation.success(res, { isLog: true });
 
-      void this.router.navigate(['/reset-password'], {
+      void this.router.navigate(["/reset-password"], {
         queryParams: { email },
       });
     } catch (err) {

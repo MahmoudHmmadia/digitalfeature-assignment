@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
-import { CallsService } from './use-calls.service';
+import { Injectable, inject } from "@angular/core";
+import { CallsService } from "./use-calls.service";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class CustomMutationService {
   private readonly calls = inject(CallsService);
 

@@ -61,12 +61,13 @@ export async function toggleVote(req: Request, res: Response) {
 
 export async function getVotes(req: Request, res: Response) {
   try {
-    const { feedbackRequestId } = req.query;
+    const { feedbackRequestId, mine } = req.query;
 
-    const where: { feedbackRequestId?: string } = {};
+    const where: { feedbackRequestId?: string; authorId?: string } = {};
 
     if (feedbackRequestId)
       where.feedbackRequestId = feedbackRequestId as string;
+    if (String(mine) === "true") where.authorId = req.account!.id;
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,

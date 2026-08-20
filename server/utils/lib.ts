@@ -309,4 +309,3 @@ export function transformTranslations(data: any, lang: "en" | "ar"): any {
 
   return result;
 }
-

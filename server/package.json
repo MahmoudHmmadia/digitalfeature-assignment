@@ -8,8 +8,9 @@
     "dev": "tsx watch server.ts",
     "build": "esbuild server.ts --bundle --platform=node --outfile=server.js --external:@prisma/client --external:.prisma/client",
     "typecheck": "tsc --noEmit",
+    "db:start": "docker compose -f ../docker-compose.yml up -d mongodb",
     "db:push": "prisma db push",
-    "db:seed": "bun run seeders/admin.seeder.ts",
+    "db:seed": "bun run seeders/seed.ts",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
     "migrate": "prisma db push",
@@ -19,7 +20,11 @@
     "init-prisma": "prisma init",
     "test": "echo \"No server tests specified\""
   },
-  "keywords": ["express", "typescript", "nodejs"],
+  "keywords": [
+    "express",
+    "typescript",
+    "nodejs"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "bun@1.3.5",

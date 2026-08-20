@@ -5,16 +5,18 @@ import {
   input,
   model,
   signal,
-} from '@angular/core';
+  inject,
+} from "@angular/core";
 import {
   ControlValueAccessor,
   FormsModule,
   NG_VALUE_ACCESSOR,
-} from '@angular/forms';
-import { InputComponent } from './ui/input.component';
+} from "@angular/forms";
+import { InputComponent } from "./ui/input.component";
+import { TranslatorService } from "../lang/translator.service";
 
 @Component({
-  selector: 'app-custom-input',
+  selector: "app-custom-input",
   standalone: true,
   imports: [InputComponent, FormsModule],
   providers: [
@@ -26,12 +28,16 @@ import { InputComponent } from './ui/input.component';
   ],
   template: `
     <label class="grid gap-1.5">
-      <span class="text-sm font-medium">{{ label() }}</span>
+      <span class="text-sm font-medium">{{ t.text(label()) }}</span>
 
       <app-input
         [type]="type()"
         [placeholder]="placeholder()"
-        [className]="error() ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30' : ''"
+        [className]="
+          error()
+            ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30'
+            : ''
+        "
         [(value)]="innerValue"
         (valueChange)="onInnerChange($event)"
       />
@@ -46,16 +52,17 @@ import { InputComponent } from './ui/input.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomInputComponent implements ControlValueAccessor {
+  readonly t = inject(TranslatorService);
   readonly label = input.required<string>();
-  readonly type = input('text');
-  readonly placeholder = input('');
-  readonly error = input('');
+  readonly type = input("text");
+  readonly placeholder = input("");
+  readonly error = input("");
 
   /** Two-way binding for template-driven forms */
-  readonly value = model('');
+  readonly value = model("");
 
   /** Internal value used by both modes */
-  readonly innerValue = signal('');
+  readonly innerValue = signal("");
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (val: string) => void = () => {};
@@ -70,7 +77,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   /* ── ControlValueAccessor ── */
 
   writeValue(val: string): void {
-    const v = val ?? '';
+    const v = val ?? "";
     this.innerValue.set(v);
     this.value.set(v);
   }

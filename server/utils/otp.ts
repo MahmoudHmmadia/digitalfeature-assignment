@@ -1,22 +1,22 @@
-import { config } from 'dotenv'
-import { generateCode, sendMail } from './lib'
-import { prisma } from './prisma'
+import { config } from "dotenv";
+import { generateCode, sendMail } from "./lib";
+import { prisma } from "./prisma";
 
-config()
+config();
 export async function sendOTP(email: string) {
-  const otp = process.env.MODE == 'DEV' ? '000000' : generateCode(6)
+  const otp = process.env.MODE == "DEV" ? "000000" : generateCode(6);
 
-  if (process.env.MODE == 'DEV') {
-    console.log('OTP: ', otp)
+  if (process.env.MODE == "DEV") {
+    console.log("OTP: ", otp);
   } else {
     await sendMail({
       email: email,
-      subject: 'OTP Verification',
+      subject: "OTP Verification",
       html: `Your OTP is ${otp}`,
-    })
+    });
   }
 
-  return otp
+  return otp;
 }
 
 export async function verifyOTP(email: string, code: string) {
@@ -24,16 +24,16 @@ export async function verifyOTP(email: string, code: string) {
     where: {
       email: email.trim().toLowerCase(),
     },
-  })
+  });
 
   if (!account) {
-    return false
+    return false;
   }
   if (account.code !== code) {
-    return false
+    return false;
   }
   if (!account.codeExpiry || account.codeExpiry < new Date()) {
-    return false
+    return false;
   }
-  return true
+  return true;
 }

@@ -24,9 +24,8 @@ const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const feedbackRequestInclude = (accountId: string) => ({
   author: { select: PUBLIC_ACCOUNT_SHAPE },
   category: true,
-  status: true,
   votes: {
-    where: { accountId },
+    where: { authorId: accountId },
     select: { id: true },
   },
   _count: {
@@ -99,8 +98,7 @@ async function findActiveCategory(categoryId: string) {
 }
 
 async function assertWithinSubmissionRateLimit(authorId: string) {
-  const settings = await prisma.appSettings.findFirst();
-  const limit = settings?.submissionRateLimit ?? 10;
+  const limit = 10;
   const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS);
 
   const submittedCount = await prisma.feedbackRequest.count({
@@ -234,6 +232,7 @@ async function listFeedbackRequestsFor(
   req: Request,
   res: Response,
   authorIdOverride?: string,
+  excludeAuthorId?: string,
 ) {
   const filters = req.query as ListFeedbackRequestsQuery;
   const accountId = req.account!.id;
@@ -241,7 +240,10 @@ async function listFeedbackRequestsFor(
   const { data, pagesNumber, totalCount } = await paginate({
     req,
     prismaModel: prisma.feedbackRequest,
-    query: buildListQuery(filters, authorIdOverride),
+    query: {
+      ...buildListQuery(filters, authorIdOverride),
+      ...(excludeAuthorId ? { authorId: { not: excludeAuthorId } } : {}),
+    },
     populate: feedbackRequestInclude(accountId),
     orderBy: buildListOrderBy(filters),
   });
@@ -270,7 +272,7 @@ export async function getFeedbackRequests(req: Request, res: Response) {
       });
     }
 
-    return await listFeedbackRequestsFor(req, res);
+    return await listFeedbackRequestsFor(req, res, undefined, req.account.id);
   } catch (err) {
     return serverErrorResponse({ err, res, req });
   }

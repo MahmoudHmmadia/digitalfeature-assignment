@@ -1,17 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthContainerComponent } from '../../components/auth-container.component';
-import { CustomButtonComponent } from '../../components/custom-button.component';
-import { CustomInputComponent } from '../../components/custom-input.component';
-import { ForgotPasswordService } from './forgot-password.service';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { AuthContainerComponent } from "../../components/auth-container.component";
+import { CustomButtonComponent } from "../../components/custom-button.component";
+import { CustomInputComponent } from "../../components/custom-input.component";
+import { ForgotPasswordService } from "./forgot-password.service";
+import { TranslatorService } from "../../lang/translator.service";
 
 @Component({
-  selector: 'app-forgot-password',
+  selector: "app-forgot-password",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -44,14 +41,14 @@ import { ForgotPasswordService } from './forgot-password.service';
           [loading]="svc.loading()"
           className="w-full"
         >
-          Send reset code
+          {{ t.text("Send reset code") }}
         </app-custom-button>
       </form>
 
       <p class="mt-4 text-center text-sm text-muted-foreground">
-        Remember your password?
+        {{ t.text("Remember your password?") }}
         <a routerLink="/login" class="font-medium text-primary hover:underline">
-          Sign in
+          {{ t.text("Sign in") }}
         </a>
       </p>
     </app-auth-container>
@@ -60,4 +57,5 @@ import { ForgotPasswordService } from './forgot-password.service';
 })
 export class ForgotPasswordComponent {
   readonly svc = inject(ForgotPasswordService);
+  readonly t = inject(TranslatorService);
 }

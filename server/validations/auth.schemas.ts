@@ -1,46 +1,46 @@
-import Joi from 'joi'
+import Joi from "joi";
 
 export const locationString = Joi.string().custom((value, helpers) => {
-  let parsedValue
+  let parsedValue;
 
   try {
-    parsedValue = JSON.parse(value)
+    parsedValue = JSON.parse(value);
   } catch (e) {
-    return helpers.error('string.json')
+    return helpers.error("string.json");
   }
 
-  if (typeof parsedValue != 'object' || !parsedValue.lat || !parsedValue.lng) {
-    return helpers.error('object.missingLatLng')
+  if (typeof parsedValue != "object" || !parsedValue.lat || !parsedValue.lng) {
+    return helpers.error("object.missingLatLng");
   }
 
-  return value
-}, 'JSON String Validation')
+  return value;
+}, "JSON String Validation");
 
 export type loginDto = {
-  email: string
-  password: string
-  fcmToken?: string
-}
+  email: string;
+  password: string;
+  fcmToken?: string;
+};
 
 export type registerDto = {
-  email: string
-  password: string
-  name?: string
-  firstName?: string
-  lastName?: string
-  phoneNumber?: string
+  email: string;
+  password: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
   location?: {
-    lat: number
-    lng: number
-    display_name?: string
-  }
-}
+    lat: number;
+    lng: number;
+    display_name?: string;
+  };
+};
 
 export const loginSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required(),
   fcmToken: Joi.string().optional(),
   password: Joi.string().required(),
-})
+});
 
 export const registerSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required(),
@@ -55,55 +55,55 @@ export const registerSchema = Joi.object({
     display_name: Joi.string().optional(),
   }).optional(),
 })
-  .or('name', 'firstName')
+  .or("name", "firstName")
   .messages({
-    'object.missing': 'Name or firstName is required',
-  })
+    "object.missing": "Name or firstName is required",
+  });
 
 export type VerifyOtpDto = {
-  fcmToken?: string
-  email: string
-  code: string
-}
+  fcmToken?: string;
+  email: string;
+  code: string;
+};
 
 export const verifyOtpSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required().messages({
-    'string.email': 'Please provide a valid email address',
-    'any.required': 'Email is required',
+    "string.email": "Please provide a valid email address",
+    "any.required": "Email is required",
   }),
   code: Joi.string().length(6).required().messages({
-    'string.length': 'Verification code must be 6 digits',
-    'any.required': 'Verification code is required',
+    "string.length": "Verification code must be 6 digits",
+    "any.required": "Verification code is required",
   }),
 
   fcmToken: Joi.string().optional(),
-})
+});
 
 export type RequestNewCodeDto = {
-  email: string
-}
+  email: string;
+};
 
 export const newOtpSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required().messages({
-    'string.email': 'Please provide a valid email address',
-    'any.required': 'Email is required',
+    "string.email": "Please provide a valid email address",
+    "any.required": "Email is required",
   }),
-})
+});
 
 export type ResetPasswordDto = {
-  email: string
-  code: string
-  password: string
-}
+  email: string;
+  code: string;
+  password: string;
+};
 
 export const resetPasswordSchema = Joi.object({
   email: Joi.string().email().trim().lowercase().required().messages({
-    'string.email': 'Please provide a valid email address',
-    'any.required': 'Email is required',
+    "string.email": "Please provide a valid email address",
+    "any.required": "Email is required",
   }),
   code: Joi.string().length(6).required().messages({
-    'string.length': 'Verification code must be 6 digits',
-    'any.required': 'Verification code is required',
+    "string.length": "Verification code must be 6 digits",
+    "any.required": "Verification code is required",
   }),
   password: Joi.string().min(8).required(),
-})
+});

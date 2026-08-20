@@ -24,19 +24,19 @@ The structure intentionally mirrors the supplied React template:
 
 ## React -> Angular mapping
 
-| Existing React template | Angular equivalent |
-|---|---|
-| React | Angular standalone components |
-| React Router | Angular Router |
-| React Hook Form | Angular Reactive Forms |
-| Preact Signals | Angular Signals |
-| React Query | TanStack Angular Query |
-| Axios | Axios kept for API compatibility |
-| Radix UI | Small Angular UI primitives |
-| lucide-react | lucide-angular |
-| Tailwind CSS | Tailwind CSS v4 |
-| clsx / tailwind-merge | Same |
-| Firebase | Same Firebase SDK |
+| Existing React template | Angular equivalent               |
+| ----------------------- | -------------------------------- |
+| React                   | Angular standalone components    |
+| React Router            | Angular Router                   |
+| React Hook Form         | Angular Reactive Forms           |
+| Preact Signals          | Angular Signals                  |
+| React Query             | TanStack Angular Query           |
+| Axios                   | Axios kept for API compatibility |
+| Radix UI                | Small Angular UI primitives      |
+| lucide-react            | lucide-angular                   |
+| Tailwind CSS            | Tailwind CSS v4                  |
+| clsx / tailwind-merge   | Same                             |
+| Firebase                | Same Firebase SDK                |
 
 ## Start
 

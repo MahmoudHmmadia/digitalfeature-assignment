@@ -1,13 +1,14 @@
 import { Router } from "express";
 import { toggleVote, getVotes } from "../controllers/vote.controller";
-import { validate } from "../middleware/validation.middleware";
+import { validate, validateQuery } from "../middleware/validation.middleware";
 import { toggleVoteSchema } from "@/validations/vote.schemas";
+import { listVotesQuerySchema } from "@/validations/vote.schemas";
 
 const voteRoutes = Router();
 
 voteRoutes
   .route("/")
-  .get(getVotes)
+  .get(validateQuery(listVotesQuerySchema), getVotes)
   .post(validate(toggleVoteSchema), toggleVote);
 
 export default voteRoutes;

@@ -1,18 +1,15 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthContainerComponent } from '../../components/auth-container.component';
-import { CustomButtonComponent } from '../../components/custom-button.component';
-import { PasswordInputComponent } from '../../components/password-input.component';
-import { OtpInputComponent } from '../../components/otp-input.component';
-import { ResetPasswordService } from './reset-password.service';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { AuthContainerComponent } from "../../components/auth-container.component";
+import { CustomButtonComponent } from "../../components/custom-button.component";
+import { PasswordInputComponent } from "../../components/password-input.component";
+import { OtpInputComponent } from "../../components/otp-input.component";
+import { ResetPasswordService } from "./reset-password.service";
+import { TranslatorService } from "../../lang/translator.service";
 
 @Component({
-  selector: 'app-reset-password',
+  selector: "app-reset-password",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -26,7 +23,9 @@ import { ResetPasswordService } from './reset-password.service';
   template: `
     <app-auth-container
       title="Reset password"
-      [subtitle]="'Enter the code sent to ' + svc.email() + ' and your new password'"
+      [subtitle]="
+        'Enter the code sent to ' + svc.email() + ' and your new password'
+      "
     >
       <form
         class="flex flex-col gap-4"
@@ -58,13 +57,13 @@ import { ResetPasswordService } from './reset-password.service';
           [loading]="svc.loading()"
           className="w-full mt-1"
         >
-          Reset password
+          {{ t.text("Reset password") }}
         </app-custom-button>
       </form>
 
       <p class="mt-4 text-center text-sm text-muted-foreground">
         <a routerLink="/login" class="font-medium text-primary hover:underline">
-          Back to sign in
+          {{ t.text("Back to sign in") }}
         </a>
       </p>
     </app-auth-container>
@@ -73,4 +72,5 @@ import { ResetPasswordService } from './reset-password.service';
 })
 export class ResetPasswordComponent {
   readonly svc = inject(ResetPasswordService);
+  readonly t = inject(TranslatorService);
 }

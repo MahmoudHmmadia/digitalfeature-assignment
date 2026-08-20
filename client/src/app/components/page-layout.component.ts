@@ -2,27 +2,47 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-} from '@angular/core';
+  inject,
+} from "@angular/core";
+import { TranslatorService } from "../lang/translator.service";
+import { Location } from "@angular/common";
+import { Router } from "@angular/router";
+import { LucideAngularModule } from "lucide-angular";
 
 @Component({
-  selector: 'app-page-layout',
+  selector: "app-page-layout",
   standalone: true,
+  imports: [LucideAngularModule],
   template: `
-    <section class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+    <section
+      class="mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8"
+    >
       <header class="flex flex-col gap-2 border-b border-slate-200 pb-5">
+        @if (showBack()) {
+          <button
+            type="button"
+            class="mb-1 inline-flex w-fit items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-950"
+            (click)="goBack()"
+          >
+            <lucide-icon name="arrow-left" [size]="17" class="rtl:rotate-180" />
+            {{ t.text("Back") }}
+          </button>
+        }
         <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
           FeedbackHub
         </p>
 
-        <div class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+        <div
+          class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between"
+        >
           <div class="min-w-0">
             <h1 class="text-2xl font-semibold text-slate-950 sm:text-3xl">
-              {{ title() }}
+              {{ t.text(title()) }}
             </h1>
 
             @if (description()) {
               <p class="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                {{ description() }}
+                {{ t.text(description() || "") }}
               </p>
             }
           </div>
@@ -39,6 +59,22 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageLayoutComponent {
+  readonly t = inject(TranslatorService);
+  private readonly location = inject(Location);
+  private readonly router = inject(Router);
   readonly title = input.required<string>();
   readonly description = input<string>();
+  readonly backRoute = input<string>();
+
+  showBack(): boolean {
+    return (
+      !!this.backRoute() ||
+      this.router.url.split("?")[0].split("/").filter(Boolean).length > 1
+    );
+  }
+
+  goBack(): void {
+    if (globalThis.history?.length > 1) this.location.back();
+    else void this.router.navigateByUrl(this.backRoute() || "/");
+  }
 }

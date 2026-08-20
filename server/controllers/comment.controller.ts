@@ -64,7 +64,7 @@ export async function editComment(req: Request, res: Response) {
         message: "NOT_FOUND",
       });
 
-    if (comment.authorId != req.account!.id)
+    if (comment.authorId != req.account!.id && req.account!.role !== 0)
       return clientErrorResponse({
         req,
         res,
@@ -92,12 +92,13 @@ export async function editComment(req: Request, res: Response) {
 
 export async function getComments(req: Request, res: Response) {
   try {
-    const { feedbackRequestId } = req.query;
+    const { feedbackRequestId, mine } = req.query;
 
-    const where: { feedbackRequestId?: string } = {};
+    const where: { feedbackRequestId?: string; authorId?: string } = {};
 
     if (feedbackRequestId)
       where.feedbackRequestId = feedbackRequestId as string;
+    if (String(mine) === "true") where.authorId = req.account!.id;
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,
@@ -136,7 +137,7 @@ export async function removeComment(req: Request, res: Response) {
         message: "NOT_FOUND",
       });
 
-    if (comment.authorId != req.account!.id)
+    if (comment.authorId != req.account!.id && req.account!.role !== 0)
       return clientErrorResponse({
         req,
         res,

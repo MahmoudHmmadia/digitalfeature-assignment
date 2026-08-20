@@ -1,11 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
 
 @Component({
-  selector: 'app-divider',
+  selector: "app-divider",
   standalone: true,
   template: `
     <div class="relative flex items-center py-2">
@@ -17,5 +13,5 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DividerComponent {
-  readonly text = input('or');
+  readonly text = input("or");
 }

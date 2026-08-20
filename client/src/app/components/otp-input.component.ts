@@ -6,18 +6,20 @@ import {
   signal,
   ElementRef,
   viewChildren,
-} from '@angular/core';
+  inject,
+} from "@angular/core";
 import {
   ControlValueAccessor,
   FormsModule,
   NG_VALUE_ACCESSOR,
-} from '@angular/forms';
-import { cn } from '../lib/utils';
+} from "@angular/forms";
+import { cn } from "../lib/utils";
+import { TranslatorService } from "../lang/translator.service";
 
 const CODE_LENGTH = 6;
 
 @Component({
-  selector: 'app-otp-input',
+  selector: "app-otp-input",
   standalone: true,
   imports: [FormsModule],
   providers: [
@@ -30,7 +32,7 @@ const CODE_LENGTH = 6;
   template: `
     <div class="grid gap-1.5">
       @if (label()) {
-        <span class="text-sm font-medium">{{ label() }}</span>
+        <span class="text-sm font-medium">{{ t.text(label()) }}</span>
       }
 
       <div class="flex justify-center gap-2">
@@ -61,14 +63,16 @@ const CODE_LENGTH = 6;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OtpInputComponent implements ControlValueAccessor {
-  readonly label = input('');
-  readonly error = input('');
+  readonly t = inject(TranslatorService);
+  readonly label = input("");
+  readonly error = input("");
 
   readonly indices = Array.from({ length: CODE_LENGTH }, (_, i) => i);
-  readonly digits = signal<string[]>(Array(CODE_LENGTH).fill(''));
+  readonly digits = signal<string[]>(Array(CODE_LENGTH).fill(""));
   readonly focusedIndex = signal(-1);
 
-  readonly digitInputs = viewChildren<ElementRef<HTMLInputElement>>('digitInput');
+  readonly digitInputs =
+    viewChildren<ElementRef<HTMLInputElement>>("digitInput");
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChangeFn: (val: string) => void = () => {};
@@ -77,17 +81,17 @@ export class OtpInputComponent implements ControlValueAccessor {
 
   digitClasses(): string {
     return cn(
-      'flex h-12 w-11 items-center justify-center rounded-md border bg-transparent text-center text-lg font-semibold shadow-xs outline-none transition-all',
-      'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]',
+      "flex h-12 w-11 items-center justify-center rounded-md border bg-transparent text-center text-lg font-semibold shadow-xs outline-none transition-all",
+      "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
       this.error()
-        ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30'
-        : '',
+        ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30"
+        : "",
     );
   }
 
   onDigitInput(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
-    const char = input.value.replace(/\D/g, '').slice(-1);
+    const char = input.value.replace(/\D/g, "").slice(-1);
     input.value = char;
 
     const current = [...this.digits()];
@@ -101,15 +105,15 @@ export class OtpInputComponent implements ControlValueAccessor {
   }
 
   onKeyDown(event: KeyboardEvent, index: number): void {
-    if (event.key === 'Backspace') {
+    if (event.key === "Backspace") {
       const current = [...this.digits()];
 
       if (current[index]) {
-        current[index] = '';
+        current[index] = "";
         this.digits.set(current);
         this.emitValue(current);
       } else if (index > 0) {
-        current[index - 1] = '';
+        current[index - 1] = "";
         this.digits.set(current);
         this.emitValue(current);
         this.focusAt(index - 1);
@@ -118,23 +122,23 @@ export class OtpInputComponent implements ControlValueAccessor {
       event.preventDefault();
     }
 
-    if (event.key === 'ArrowLeft' && index > 0) {
+    if (event.key === "ArrowLeft" && index > 0) {
       this.focusAt(index - 1);
     }
 
-    if (event.key === 'ArrowRight' && index < CODE_LENGTH - 1) {
+    if (event.key === "ArrowRight" && index < CODE_LENGTH - 1) {
       this.focusAt(index + 1);
     }
   }
 
   onPaste(event: ClipboardEvent): void {
     event.preventDefault();
-    const text = event.clipboardData?.getData('text') ?? '';
-    const cleaned = text.replace(/\D/g, '').slice(0, CODE_LENGTH);
+    const text = event.clipboardData?.getData("text") ?? "";
+    const cleaned = text.replace(/\D/g, "").slice(0, CODE_LENGTH);
 
     if (!cleaned) return;
 
-    const current = Array(CODE_LENGTH).fill('');
+    const current = Array(CODE_LENGTH).fill("");
     for (let i = 0; i < cleaned.length; i++) {
       current[i] = cleaned[i];
     }
@@ -160,14 +164,14 @@ export class OtpInputComponent implements ControlValueAccessor {
   }
 
   private emitValue(digits: string[]): void {
-    this.onChangeFn(digits.join(''));
+    this.onChangeFn(digits.join(""));
   }
 
   /* ── ControlValueAccessor ── */
 
   writeValue(val: string): void {
-    const v = (val ?? '').replace(/\D/g, '').slice(0, CODE_LENGTH);
-    const arr = Array(CODE_LENGTH).fill('');
+    const v = (val ?? "").replace(/\D/g, "").slice(0, CODE_LENGTH);
+    const arr = Array(CODE_LENGTH).fill("");
     for (let i = 0; i < v.length; i++) {
       arr[i] = v[i];
     }

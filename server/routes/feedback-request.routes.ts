@@ -7,48 +7,45 @@ import {
   getMyFeedbackRequests,
   pinFeedbackRequest,
   removeFeedbackRequest,
-} from '../controllers/feedback-request.controller'
-import { validate, validateQuery } from '../middleware/validation.middleware'
-import verifyToken, {
-  verifyAdmin,
-} from '../middleware/verifyToken.middleware'
+} from "../controllers/feedback-request.controller";
+import { validate, validateQuery } from "../middleware/validation.middleware";
+import verifyToken, { verifyAdmin } from "../middleware/verifyToken.middleware";
 import {
   changeFeedbackRequestStatusSchema,
   createFeedbackRequestSchema,
   editFeedbackRequestSchema,
   listFeedbackRequestsQuerySchema,
   pinFeedbackRequestSchema,
-} from '../validations/feedback-request.schemas'
-import { Router } from 'express'
+} from "../validations/feedback-request.schemas";
+import { Router } from "express";
 
-const feedbackRequestRoutes = Router()
-
+const feedbackRequestRoutes = Router();
 
 feedbackRequestRoutes
-  .route('/')
+  .route("/")
   .get(validateQuery(listFeedbackRequestsQuerySchema), getFeedbackRequests)
-  .post(validate(createFeedbackRequestSchema), createFeedbackRequest)
+  .post(validate(createFeedbackRequestSchema), createFeedbackRequest);
 
 feedbackRequestRoutes
-  .route('/mine')
-  .get(validateQuery(listFeedbackRequestsQuerySchema), getMyFeedbackRequests)
+  .route("/mine")
+  .get(validateQuery(listFeedbackRequestsQuerySchema), getMyFeedbackRequests);
 
 feedbackRequestRoutes
-  .route('/:id/status')
+  .route("/:id/status")
   .patch(
     verifyAdmin,
     validate(changeFeedbackRequestStatusSchema),
     changeFeedbackRequestStatus,
-  )
+  );
 
 feedbackRequestRoutes
-  .route('/:id/pin')
-  .patch(verifyAdmin, validate(pinFeedbackRequestSchema), pinFeedbackRequest)
+  .route("/:id/pin")
+  .patch(verifyAdmin, validate(pinFeedbackRequestSchema), pinFeedbackRequest);
 
 feedbackRequestRoutes
-  .route('/:id')
+  .route("/:id")
   .get(getFeedbackRequest)
   .patch(validate(editFeedbackRequestSchema), editFeedbackRequest)
-  .delete(removeFeedbackRequest)
+  .delete(removeFeedbackRequest);
 
-export default feedbackRequestRoutes
+export default feedbackRequestRoutes;

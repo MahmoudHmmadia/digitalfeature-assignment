@@ -10,7 +10,7 @@ export function generateSlug(text: string): string {
 export async function generateUniqueSlug(
   baseText: string,
   checkExists: (slug: string) => Promise<boolean>,
-  maxAttempts: number = 10
+  maxAttempts: number = 10,
 ): Promise<string> {
   let slug = generateSlug(baseText);
   let attempt = 0;

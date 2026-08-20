@@ -1,26 +1,26 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed } from "@angular/core";
 import {
   FormBuilder,
   Validators,
   type AbstractControl,
   type ValidationErrors,
-} from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthApiService } from '../../api/auth.api';
-import { CustomMutationService } from '../../hooks/use-custom-mutation.service';
+} from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
+import { AuthApiService } from "../../api/auth.api";
+import { CustomMutationService } from "../../hooks/use-custom-mutation.service";
 
 function passwordMatchValidator(
   control: AbstractControl,
 ): ValidationErrors | null {
-  const password = control.get('password');
-  const confirm = control.get('confirmPassword');
+  const password = control.get("password");
+  const confirm = control.get("confirmPassword");
 
   if (password && confirm && password.value !== confirm.value) {
     confirm.setErrors({ passwordMismatch: true });
     return { passwordMismatch: true };
   }
 
-  if (confirm?.hasError('passwordMismatch')) {
+  if (confirm?.hasError("passwordMismatch")) {
     confirm.setErrors(null);
   }
 
@@ -36,13 +36,16 @@ export class ResetPasswordService {
   private readonly mutation = inject(CustomMutationService);
 
   readonly loading = signal(false);
-  readonly email = signal('');
+  readonly email = signal("");
 
   readonly form = this.fb.nonNullable.group(
     {
-      code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
-      confirmPassword: ['', [Validators.required]],
+      code: [
+        "",
+        [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
+      ],
+      password: ["", [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ["", [Validators.required]],
     },
     { validators: [passwordMatchValidator] },
   );
@@ -52,19 +55,24 @@ export class ResetPasswordService {
     const result: Record<string, string | undefined> = {};
 
     if (c.code.touched && c.code.errors) {
-      if (c.code.errors['required']) result['code'] = 'Verification code is required';
-      else if (c.code.errors['minlength'] || c.code.errors['maxlength'])
-        result['code'] = 'Code must be 6 digits';
+      if (c.code.errors["required"])
+        result["code"] = "Verification code is required";
+      else if (c.code.errors["minlength"] || c.code.errors["maxlength"])
+        result["code"] = "Code must be 6 digits";
     }
 
     if (c.password.touched && c.password.errors) {
-      if (c.password.errors['required']) result['password'] = 'Password is required';
-      else if (c.password.errors['minlength']) result['password'] = 'Must be at least 8 characters';
+      if (c.password.errors["required"])
+        result["password"] = "Password is required";
+      else if (c.password.errors["minlength"])
+        result["password"] = "Must be at least 8 characters";
     }
 
     if (c.confirmPassword.touched && c.confirmPassword.errors) {
-      if (c.confirmPassword.errors['required']) result['confirmPassword'] = 'Please confirm your password';
-      else if (c.confirmPassword.errors['passwordMismatch']) result['confirmPassword'] = 'Passwords do not match';
+      if (c.confirmPassword.errors["required"])
+        result["confirmPassword"] = "Please confirm your password";
+      else if (c.confirmPassword.errors["passwordMismatch"])
+        result["confirmPassword"] = "Passwords do not match";
     }
 
     return result;
@@ -72,8 +80,8 @@ export class ResetPasswordService {
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
-      if (params['email']) {
-        this.email.set(params['email']);
+      if (params["email"]) {
+        this.email.set(params["email"]);
       }
     });
   }
@@ -95,7 +103,7 @@ export class ResetPasswordService {
         password: v.password,
       });
 
-      this.mutation.success(res, { isLog: true, to: '/login' });
+      this.mutation.success(res, { isLog: true, to: "/login" });
     } catch (err) {
       this.mutation.error(err);
     } finally {

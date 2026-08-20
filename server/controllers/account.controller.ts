@@ -10,6 +10,7 @@ import { deleteFile, imagesUrl, paginate } from "@/utils/lib";
 import {
   EditMyAccountDto,
   ToggleAccountSuspendedDto,
+  SetAccountDeletedDto,
 } from "@/validations/account.schemas";
 import { PUBLIC_ACCOUNT_SHAPE } from "@/constants/shapes";
 
@@ -30,7 +31,7 @@ export async function editMyAccount(req: Request, res: Response) {
         message: "NO_PERMISSIONS",
       });
 
-    await prisma.account.update({
+    const updated = await prisma.account.update({
       where: {
         id: req.account!.id,
       },
@@ -52,7 +53,31 @@ export async function editMyAccount(req: Request, res: Response) {
       res,
       req,
       message: "MY_ACCOUNT_UPDATED_SUCCESSFULLY",
+      data: {
+        id: updated.id,
+        name: updated.name,
+        avatarUrl: updated.avatarUrl,
+      },
     });
+  } catch (err) {
+    return serverErrorResponse({ err, res, req });
+  }
+}
+
+export async function removeMyAccount(req: Request, res: Response) {
+  try {
+    if (req.account!.role === 0)
+      return clientErrorResponse({
+        req,
+        res,
+        message: "NO_PERMISSIONS",
+        status: 403,
+      });
+    await prisma.account.update({
+      where: { id: req.account!.id },
+      data: { isDeleted: true, token: null, fcmToken: null },
+    });
+    return successResponse({ res, req, message: "DELETED_SUCCESSFULLY" });
   } catch (err) {
     return serverErrorResponse({ err, res, req });
   }
@@ -96,18 +121,55 @@ export async function toggleAccountSuspended(req: Request, res: Response) {
   }
 }
 
+export async function setAccountDeleted(req: Request, res: Response) {
+  try {
+    const { isDeleted } = req.body as SetAccountDeletedDto;
+
+    const account = await prisma.account.findFirst({
+      where: { id: String(req.params.id), role: 1 },
+    });
+
+    if (!account)
+      return clientErrorResponse({ req, res, message: "NOT_FOUND" });
+
+    await prisma.account.update({
+      where: { id: account.id },
+      data: {
+        isDeleted,
+        ...(isDeleted ? { token: null, fcmToken: null } : {}),
+      },
+    });
+
+    return successResponse({
+      res,
+      req,
+      message: isDeleted ? "DELETED_SUCCESSFULLY" : "UPDATED_SUCCESSFULLY",
+    });
+  } catch (err) {
+    return serverErrorResponse({ err, res, req });
+  }
+}
+
 export async function getAccounts(req: Request, res: Response) {
   try {
-    const { name, email, isSuspended } = req.query as {
+    const { name, email, isSuspended, isDeleted } = req.query as {
       name?: any;
       email?: string;
       isSuspended?: string;
+      isDeleted?: string;
     };
-    const where: { name?: any; email?: any; isSuspended?: boolean } = {};
+    const where: {
+      name?: any;
+      email?: any;
+      isSuspended?: boolean;
+      isDeleted?: boolean;
+      role: number;
+    } = { role: 1 };
 
     if (name) where.name = { contains: name, mode: "insensitive" };
     if (email) where.email = { contains: email, mode: "insensitive" };
     if (isSuspended) where.isSuspended = isSuspended === "true";
+    if (isDeleted) where.isDeleted = isDeleted === "true";
 
     const { data, totalCount, pagesNumber } = await paginate({
       query: where,

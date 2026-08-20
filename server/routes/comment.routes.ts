@@ -5,17 +5,18 @@ import {
   editComment,
   getComments,
 } from "../controllers/comment.controller";
-import { validate } from "../middleware/validation.middleware";
+import { validate, validateQuery } from "../middleware/validation.middleware";
 import {
   createCommentSchema,
   editCommentSchema,
+  listCommentsQuerySchema,
 } from "../validations/comment.schemas";
 
 const commentRoutes = Router();
 
 commentRoutes
   .route("/")
-  .get(getComments)
+  .get(validateQuery(listCommentsQuerySchema), getComments)
   .post(validate(createCommentSchema), createComment)
   .patch(validate(editCommentSchema), editComment);
 

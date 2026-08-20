@@ -3,16 +3,17 @@ import {
   Component,
   inject,
   signal,
-} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { PageLayoutComponent } from '../../components/page-layout.component';
+} from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { PageLayoutComponent } from "../../components/page-layout.component";
+import { TranslatorService } from "../../lang/translator.service";
 import {
   CardComponent,
   CardContentComponent,
   CardDescriptionComponent,
   CardHeaderComponent,
   CardTitleComponent,
-} from '../../components/ui/card.component';
+} from "../../components/ui/card.component";
 
 interface FeaturePageData {
   title: string;
@@ -21,13 +22,17 @@ interface FeaturePageData {
 }
 
 const fallbackData: FeaturePageData = {
-  title: 'Workspace',
-  description: 'Manage FeedbackHub activity from this workspace.',
-  items: ['Review the latest activity', 'Use filters to focus the list', 'Open items to continue work'],
+  title: "Workspace",
+  description: "Manage FeedbackHub activity from this workspace.",
+  items: [
+    "Review the latest activity",
+    "Use filters to focus the list",
+    "Open items to continue work",
+  ],
 };
 
 @Component({
-  selector: 'app-feature-page',
+  selector: "app-feature-page",
   standalone: true,
   imports: [
     PageLayoutComponent,
@@ -39,16 +44,20 @@ const fallbackData: FeaturePageData = {
   ],
   template: `
     <app-page-layout
-      [title]="pageData().title"
-      [description]="pageData().description"
+      [title]="t.text(pageData().title)"
+      [description]="t.text(pageData().description)"
     >
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         @for (item of pageData().items; track item) {
           <app-card className="rounded-md border-slate-200 bg-white shadow-sm">
             <app-card-header>
-              <app-card-title>{{ item }}</app-card-title>
+              <app-card-title>{{ t.text(item) }}</app-card-title>
               <app-card-description>
-                This section is ready for the next API-backed implementation step.
+                {{
+                  t.text(
+                    "This section is ready for the next API-backed implementation step."
+                  )
+                }}
               </app-card-description>
             </app-card-header>
 
@@ -66,6 +75,7 @@ const fallbackData: FeaturePageData = {
 })
 export class FeaturePageComponent {
   private readonly route = inject(ActivatedRoute);
+  readonly t = inject(TranslatorService);
 
   readonly pageData = signal<FeaturePageData>(this.readData());
 
@@ -74,6 +84,9 @@ export class FeaturePageComponent {
   }
 
   private readData(): FeaturePageData {
-    return (this.route.snapshot.data['page'] as FeaturePageData | undefined) ?? fallbackData;
+    return (
+      (this.route.snapshot.data["page"] as FeaturePageData | undefined) ??
+      fallbackData
+    );
   }
 }

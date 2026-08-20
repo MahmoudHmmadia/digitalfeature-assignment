@@ -1,20 +1,17 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthContainerComponent } from '../../components/auth-container.component';
-import { CustomButtonComponent } from '../../components/custom-button.component';
-import { CustomInputComponent } from '../../components/custom-input.component';
-import { PasswordInputComponent } from '../../components/password-input.component';
-import { DividerComponent } from '../../components/divider.component';
-import { SocialButtonComponent } from '../../components/social-button.component';
-import { LoginService } from './login.service';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { AuthContainerComponent } from "../../components/auth-container.component";
+import { CustomButtonComponent } from "../../components/custom-button.component";
+import { CustomInputComponent } from "../../components/custom-input.component";
+import { PasswordInputComponent } from "../../components/password-input.component";
+import { DividerComponent } from "../../components/divider.component";
+import { SocialButtonComponent } from "../../components/social-button.component";
+import { LoginService } from "./login.service";
+import { TranslatorService } from "../../lang/translator.service";
 
 @Component({
-  selector: 'app-login',
+  selector: "app-login",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -56,7 +53,7 @@ import { LoginService } from './login.service';
             routerLink="/forgot-password"
             class="justify-self-end text-xs font-medium text-primary hover:underline"
           >
-            Forgot password?
+            {{ t.text("Forgot password?") }}
           </a>
         </div>
 
@@ -65,20 +62,17 @@ import { LoginService } from './login.service';
           [loading]="svc.loading()"
           className="w-full mt-1"
         >
-          Sign in
+          {{ t.text("Sign in") }}
         </app-custom-button>
       </form>
 
-      <app-divider text="or continue with" />
-
-      <app-social-button provider="google">
-        Continue with Google
-      </app-social-button>
-
       <p class="mt-4 text-center text-sm text-muted-foreground">
-        Don't have an account?
-        <a routerLink="/register" class="font-medium text-primary hover:underline">
-          Create account
+        {{ t.text("Don't have an account?") }}
+        <a
+          routerLink="/register"
+          class="font-medium text-primary hover:underline"
+        >
+          {{ t.text("Create account") }}
         </a>
       </p>
     </app-auth-container>
@@ -87,4 +81,5 @@ import { LoginService } from './login.service';
 })
 export class LoginComponent {
   readonly svc = inject(LoginService);
+  readonly t = inject(TranslatorService);
 }

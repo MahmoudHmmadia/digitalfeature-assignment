@@ -2,17 +2,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   input,
-} from '@angular/core';
+  inject,
+} from "@angular/core";
 import {
   CardComponent,
   CardContentComponent,
   CardDescriptionComponent,
   CardHeaderComponent,
   CardTitleComponent,
-} from './ui/card.component';
+} from "./ui/card.component";
+import { LanguageSwitcherComponent } from "./language-switcher.component";
+import { TranslatorService } from "../lang/translator.service";
 
 @Component({
-  selector: 'app-auth-container',
+  selector: "app-auth-container",
   standalone: true,
   imports: [
     CardComponent,
@@ -20,9 +23,13 @@ import {
     CardTitleComponent,
     CardDescriptionComponent,
     CardContentComponent,
+    LanguageSwitcherComponent,
   ],
   template: `
-    <main class="auth-page-bg relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4">
+    <main
+      class="auth-page-bg relative flex min-h-screen w-full items-center justify-center overflow-hidden p-4"
+    >
+      <div class="absolute end-4 top-4 z-20"><app-language-switcher /></div>
       <!-- Decorative blobs -->
       <div class="auth-blob auth-blob--1"></div>
       <div class="auth-blob auth-blob--2"></div>
@@ -31,11 +38,11 @@ import {
         <app-card className="auth-glass-card border-0 shadow-xl">
           <app-card-header>
             <app-card-title class="text-center text-2xl">
-              {{ title() }}
+              {{ t.text(title()) }}
             </app-card-title>
             @if (subtitle()) {
               <app-card-description class="text-center">
-                {{ subtitle() }}
+                {{ t.text(subtitle()) }}
               </app-card-description>
             }
           </app-card-header>
@@ -50,6 +57,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthContainerComponent {
-  readonly title = input('FeedbackHub');
-  readonly subtitle = input('');
+  readonly t = inject(TranslatorService);
+  readonly title = input("FeedbackHub");
+  readonly subtitle = input("");
 }

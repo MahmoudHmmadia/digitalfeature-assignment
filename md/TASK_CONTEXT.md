@@ -9,6 +9,7 @@
 FeedbackHub is an **internal product feedback board**.
 
 Employees use it to:
+
 - submit feature requests and product feedback
 - browse existing requests
 - search and filter requests
@@ -17,6 +18,7 @@ Employees use it to:
 - manage their own requests, profile, and preferences
 
 Admins use it to:
+
 - review incoming feedback
 - change request statuses
 - pin important requests
@@ -32,18 +34,18 @@ Prevent duplicate suggestions from repeatedly arriving through email by making p
 
 ## 2. Core Entity: Feedback Request
 
-| Field | Meaning |
-|---|---|
-| `title` | Short summary |
-| `description` | Longer free text |
-| `category` | Admin-configurable classification |
-| `status` | Admin-configurable workflow status |
-| `author` | User who submitted it |
-| `voteCount` | Derived from individual votes |
-| `commentCount` | Derived from comments |
-| `pinned` | Admin-controlled |
-| `createdAt` | Creation timestamp |
-| `updatedAt` | Last update timestamp |
+| Field          | Meaning                            |
+| -------------- | ---------------------------------- |
+| `title`        | Short summary                      |
+| `description`  | Longer free text                   |
+| `category`     | Admin-configurable classification  |
+| `status`       | Admin-configurable workflow status |
+| `author`       | User who submitted it              |
+| `voteCount`    | Derived from individual votes      |
+| `commentCount` | Derived from comments              |
+| `pinned`       | Admin-controlled                   |
+| `createdAt`    | Creation timestamp                 |
+| `updatedAt`    | Last update timestamp              |
 
 ### Initial category examples
 
@@ -72,6 +74,7 @@ Statuses must be configurable by admins.
 ### User
 
 A user can:
+
 - register/sign in through the identity provider
 - browse, search, filter, and paginate requests
 - create, edit, and delete their own requests
@@ -83,6 +86,7 @@ A user can:
 ### Admin
 
 An admin has all user capabilities plus:
+
 - change request status
 - pin/unpin requests
 - moderate/delete comments
@@ -111,6 +115,7 @@ The user must be able to withdraw the vote.
 ### Comment
 
 A comment contains:
+
 - author
 - request
 - content
@@ -162,6 +167,7 @@ Authorization must be enforced on the **backend**.
 Hiding a button in Angular is not authorization.
 
 The backend must verify:
+
 - authentication
 - role
 - ownership
@@ -242,6 +248,7 @@ enableVoting = false
 ```
 
 When disabled:
+
 - voting UI should be disabled/hidden
 - backend voting operations must also reject the operation
 
@@ -266,6 +273,7 @@ effective sorting
 Avoid a chain of blocking requests during application startup.
 
 Prefer:
+
 - one efficient configuration endpoint
 - parallel requests
 - cached server state
@@ -315,6 +323,7 @@ A modular monolith is acceptable if its boundaries and reasoning are documented.
 ### Authentication
 
 Use an open-source identity provider supporting:
+
 - email/password
 - at least one social provider
 
@@ -323,6 +332,7 @@ Do **not** implement authentication primitives yourself.
 ### Deployment
 
 Cloud-native:
+
 - containerized
 - environment-driven configuration
 - orchestrator-ready
@@ -532,6 +542,7 @@ Frontend validation provides good UX.
 Backend validation is authoritative.
 
 Validate:
+
 - required fields
 - valid category/status
 - comment content
@@ -560,6 +571,7 @@ Error
 ```
 
 The application should have:
+
 - responsive layout
 - keyboard accessibility
 - clear validation messages
@@ -637,6 +649,7 @@ Declined
 ### Feedback
 
 Create enough realistic data to demonstrate:
+
 - search
 - filtering
 - sorting
@@ -799,6 +812,7 @@ The assignment rewards engineering judgment, not maximum architectural complexit
 ### README.md
 
 Must explain:
+
 - what the project is
 - architecture
 - prerequisites
@@ -828,6 +842,7 @@ Include architectural choices and reasoning.
 ### SCOPE.md
 
 Explain:
+
 - what was built
 - what was deliberately not built
 - assumptions
@@ -837,6 +852,7 @@ Explain:
 ### AI_COLLABORATION.md
 
 Document:
+
 - AI tools used
 - division of labor
 - working method
@@ -908,6 +924,7 @@ The assignment emphasizes:
 ### 1. AI collaboration
 
 Evidence that the developer:
+
 - directed AI
 - understood generated code
 - verified output

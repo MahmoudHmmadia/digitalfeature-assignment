@@ -31,7 +31,13 @@ const validateQuery =
           message: error.message,
         });
       }
-      req.query = value as Request['query'];
+
+      Object.defineProperty(req, "query", {
+        value,
+        configurable: true,
+        enumerable: true,
+        writable: true,
+      });
       return next();
     } catch (err) {
       return serverErrorResponse({ res, err, req });

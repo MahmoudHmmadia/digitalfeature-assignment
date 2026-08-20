@@ -1,12 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-} from '@angular/core';
-import { ButtonComponent } from './ui/button.component';
+import { ChangeDetectionStrategy, Component, input } from "@angular/core";
+import { ButtonComponent } from "./ui/button.component";
 
 @Component({
-  selector: 'app-custom-button',
+  selector: "app-custom-button",
   standalone: true,
   imports: [ButtonComponent],
   template: `
@@ -23,9 +19,9 @@ import { ButtonComponent } from './ui/button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CustomButtonComponent {
-  readonly type = input<'button' | 'submit' | 'reset'>('button');
+  readonly type = input<"button" | "submit" | "reset">("button");
   readonly disabled = input(false);
   readonly loading = input(false);
   readonly danger = input(false);
-  readonly className = input('');
+  readonly className = input("");
 }

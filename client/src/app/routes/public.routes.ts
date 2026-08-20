@@ -1,43 +1,41 @@
-import { Routes } from '@angular/router';
-import { publicRouteGuard } from './route.guards';
+import { Routes } from "@angular/router";
+import { publicRouteGuard } from "./route.guards";
 
 export const publicRoutes: Routes = [
   {
-    path: 'login',
+    path: "login",
     loadComponent: () =>
-      import('../pages/login/login.component').then(
-        (m) => m.LoginComponent,
-      ),
+      import("../pages/login/login.component").then((m) => m.LoginComponent),
     canActivate: [publicRouteGuard],
   },
   {
-    path: 'register',
+    path: "register",
     loadComponent: () =>
-      import('../pages/register/register.component').then(
+      import("../pages/register/register.component").then(
         (m) => m.RegisterComponent,
       ),
     canActivate: [publicRouteGuard],
   },
   {
-    path: 'verify-otp',
+    path: "verify-otp",
     loadComponent: () =>
-      import('../pages/verify-otp/verify-otp.component').then(
+      import("../pages/verify-otp/verify-otp.component").then(
         (m) => m.VerifyOtpComponent,
       ),
     canActivate: [publicRouteGuard],
   },
   {
-    path: 'forgot-password',
+    path: "forgot-password",
     loadComponent: () =>
-      import('../pages/forgot-password/forgot-password.component').then(
+      import("../pages/forgot-password/forgot-password.component").then(
         (m) => m.ForgotPasswordComponent,
       ),
     canActivate: [publicRouteGuard],
   },
   {
-    path: 'reset-password',
+    path: "reset-password",
     loadComponent: () =>
-      import('../pages/reset-password/reset-password.component').then(
+      import("../pages/reset-password/reset-password.component").then(
         (m) => m.ResetPasswordComponent,
       ),
     canActivate: [publicRouteGuard],

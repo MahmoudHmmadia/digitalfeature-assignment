@@ -1,13 +1,7 @@
-import {
-  Injectable,
-  effect,
-} from '@angular/core';
-import {
-  lang,
-  persistLanguage,
-} from '../context/global';
+import { Injectable, effect } from "@angular/core";
+import { lang, persistLanguage } from "../context/global";
 
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn: "root" })
 export class InitProviderService {
   constructor() {
     effect(() => {

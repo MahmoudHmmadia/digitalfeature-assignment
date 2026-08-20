@@ -1,15 +1,9 @@
-import {
-  Injectable,
-  inject,
-  signal,
-  computed,
-  OnDestroy,
-} from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { AuthApiService } from '../../api/auth.api';
-import { CustomMutationService } from '../../hooks/use-custom-mutation.service';
-import { persistAccount, type AccountInfo } from '../../context/global';
+import { Injectable, inject, signal, computed, OnDestroy } from "@angular/core";
+import { FormBuilder, Validators } from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
+import { AuthApiService } from "../../api/auth.api";
+import { CustomMutationService } from "../../hooks/use-custom-mutation.service";
+import { persistAccount, type AccountInfo } from "../../context/global";
 
 const RESEND_COOLDOWN = 60;
 
@@ -29,10 +23,13 @@ export class VerifyOtpService implements OnDestroy {
 
   readonly canResend = computed(() => this.countdown() <= 0);
 
-  readonly email = signal('');
+  readonly email = signal("");
 
   readonly form = this.fb.nonNullable.group({
-    code: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6)]],
+    code: [
+      "",
+      [Validators.required, Validators.minLength(6), Validators.maxLength(6)],
+    ],
   });
 
   readonly errors = computed((): Record<string, string | undefined> => {
@@ -40,9 +37,10 @@ export class VerifyOtpService implements OnDestroy {
     const result: Record<string, string | undefined> = {};
 
     if (c.code.touched && c.code.errors) {
-      if (c.code.errors['required']) result['code'] = 'Verification code is required';
-      else if (c.code.errors['minlength'] || c.code.errors['maxlength'])
-        result['code'] = 'Code must be 6 digits';
+      if (c.code.errors["required"])
+        result["code"] = "Verification code is required";
+      else if (c.code.errors["minlength"] || c.code.errors["maxlength"])
+        result["code"] = "Code must be 6 digits";
     }
 
     return result;
@@ -50,8 +48,8 @@ export class VerifyOtpService implements OnDestroy {
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
-      if (params['email']) {
-        this.email.set(params['email']);
+      if (params["email"]) {
+        this.email.set(params["email"]);
       }
     });
 
@@ -82,12 +80,15 @@ export class VerifyOtpService implements OnDestroy {
         id: account.id,
         email: account.email,
         name: account.name ?? undefined,
-        role: account.role === 0 ? 'ADMIN' : 'USER',
+        avatarUrl: account.avatarUrl,
+        role: account.role === 0 ? "ADMIN" : "USER",
         token: account.token,
       } as AccountInfo);
 
       this.mutation.success(res);
-      void this.router.navigateByUrl('/');
+      void this.router.navigateByUrl(
+        account.role === 0 ? "/admin" : "/requests",
+      );
     } catch (err) {
       this.mutation.error(err);
     } finally {

@@ -16,9 +16,11 @@
     "db:seed": "turbo db:seed",
     "db:push": "turbo db:push",
     "db:generate": "turbo db:generate",
-    "db:studio": "turbo db:studio"
+    "db:studio": "turbo db:studio",
+    "prettier": "prettier . --write"
   },
   "devDependencies": {
+    "prettier": "3.9.6",
     "turbo": "^2.4.0"
   },
   "packageManager": "bun@1.3.5"

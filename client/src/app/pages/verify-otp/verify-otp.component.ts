@@ -1,17 +1,14 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-} from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
-import { AuthContainerComponent } from '../../components/auth-container.component';
-import { CustomButtonComponent } from '../../components/custom-button.component';
-import { OtpInputComponent } from '../../components/otp-input.component';
-import { VerifyOtpService } from './verify-otp.service';
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
+import { RouterLink } from "@angular/router";
+import { AuthContainerComponent } from "../../components/auth-container.component";
+import { CustomButtonComponent } from "../../components/custom-button.component";
+import { OtpInputComponent } from "../../components/otp-input.component";
+import { VerifyOtpService } from "./verify-otp.service";
+import { TranslatorService } from "../../lang/translator.service";
 
 @Component({
-  selector: 'app-verify-otp',
+  selector: "app-verify-otp",
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -42,7 +39,7 @@ import { VerifyOtpService } from './verify-otp.service';
           [loading]="svc.loading()"
           className="w-full"
         >
-          Verify email
+          {{ t.text("Verify email") }}
         </app-custom-button>
       </form>
 
@@ -54,11 +51,11 @@ import { VerifyOtpService } from './verify-otp.service';
             [disabled]="svc.resending()"
             (click)="svc.resendCode()"
           >
-            {{ svc.resending() ? 'Sending...' : 'Resend code' }}
+            {{ svc.resending() ? "Sending..." : "Resend code" }}
           </button>
         } @else {
           <p class="text-sm text-muted-foreground">
-            Resend code in
+            {{ t.text("Resend code in") }}
             <span class="font-semibold text-foreground">
               {{ svc.countdown() }}s
             </span>
@@ -68,7 +65,7 @@ import { VerifyOtpService } from './verify-otp.service';
 
       <p class="mt-2 text-center text-sm text-muted-foreground">
         <a routerLink="/login" class="font-medium text-primary hover:underline">
-          Back to sign in
+          {{ t.text("Back to sign in") }}
         </a>
       </p>
     </app-auth-container>
@@ -77,4 +74,5 @@ import { VerifyOtpService } from './verify-otp.service';
 })
 export class VerifyOtpComponent {
   readonly svc = inject(VerifyOtpService);
+  readonly t = inject(TranslatorService);
 }

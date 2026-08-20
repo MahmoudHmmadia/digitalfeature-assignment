@@ -15,31 +15,35 @@ export default async function verifyToken(
     jwt.verify(
       token!,
       process.env.SECRET!,
-      async (err: jwt.VerifyErrors | null, decoded: string | jwt.JwtPayload | undefined) => {
-      if (err) {
-        return clientErrorResponse({
-          res,
-          message: "SESSION_EXPIRED",
-          status: 403,
-          req,
-        });
-      } else {
-        const account = await prisma.account.findUnique({
-          where: { id: (decoded as any)?.id },
-        });
-
-        if (!account || account.token != token)
+      async (
+        err: jwt.VerifyErrors | null,
+        decoded: string | jwt.JwtPayload | undefined,
+      ) => {
+        if (err) {
           return clientErrorResponse({
             res,
             message: "SESSION_EXPIRED",
             status: 403,
             req,
           });
-        req.account = account;
+        } else {
+          const account = await prisma.account.findUnique({
+            where: { id: (decoded as any)?.id },
+          });
 
-        return next();
-      }
-    });
+          if (!account || account.token != token)
+            return clientErrorResponse({
+              res,
+              message: "SESSION_EXPIRED",
+              status: 403,
+              req,
+            });
+          req.account = account;
+
+          return next();
+        }
+      },
+    );
   } catch (err) {
     return serverErrorResponse({ res, err, req });
   }

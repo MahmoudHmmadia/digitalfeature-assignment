@@ -1,13 +1,13 @@
-import { Routes } from '@angular/router';
-import { adminRoutes } from './admin.routes';
-import { privateRouteGuard, unknownRouteGuard } from './route.guards';
-import { userRoutes } from './user.routes';
+import { Routes } from "@angular/router";
+import { adminRoutes } from "./admin.routes";
+import { privateRouteGuard, unknownRouteGuard } from "./route.guards";
+import { userRoutes } from "./user.routes";
 
 export const privateRoutes: Routes = [
   {
-    path: '',
+    path: "",
     loadComponent: () =>
-      import('../layouts/private-layout.component').then(
+      import("../layouts/private-layout.component").then(
         (m) => m.PrivateLayoutComponent,
       ),
     canActivate: [privateRouteGuard],
@@ -16,10 +16,10 @@ export const privateRoutes: Routes = [
       ...userRoutes,
       ...adminRoutes,
       {
-        path: '**',
+        path: "**",
         canActivate: [unknownRouteGuard],
         loadComponent: () =>
-          import('../pages/feature/feature-page.component').then(
+          import("../pages/feature/feature-page.component").then(
             (m) => m.FeaturePageComponent,
           ),
       },

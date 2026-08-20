@@ -3,13 +3,13 @@ import {
   importProvidersFrom,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
-} from '@angular/core';
+} from "@angular/core";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideRouter } from "@angular/router";
 import {
-  provideHttpClient,
-  withInterceptors,
-} from '@angular/common/http';
-import { provideRouter } from '@angular/router';
-import { provideTanStackQuery, QueryClient } from '@tanstack/angular-query-experimental';
+  provideTanStackQuery,
+  QueryClient,
+} from "@tanstack/angular-query-experimental";
 import {
   CircleUserRound,
   FileText,
@@ -30,10 +30,9 @@ import {
   Tags,
   ThumbsUp,
   X,
-} from 'lucide-angular';
-import { routes } from '../routes/routes';
-import { authInterceptor } from '../interceptors/auth.interceptor';
-
+} from "lucide-angular";
+import { routes } from "../routes/routes";
+import { authInterceptor } from "../interceptors/auth.interceptor";
 
 const lucideIcons = {
   CircleUserRound,

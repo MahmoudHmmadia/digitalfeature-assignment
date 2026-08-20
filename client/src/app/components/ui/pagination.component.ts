@@ -1,0 +1,5 @@
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ButtonComponent } from './button.component';
+import { TranslatorService } from '../../lang/translator.service';
+@Component({ selector: 'app-pagination', standalone: true, imports: [ButtonComponent], template: `<div class="flex items-center justify-between gap-3 border-t px-4 py-3 text-sm text-slate-600"><span>{{ total() }} {{ t.text(itemLabel()) }}</span><div class="flex items-center gap-2"><app-button variant="outline" [disabled]="page() <= 1" (click)="pageChange.emit(page() - 1)">{{ t.text('Previous') }}</app-button><span class="min-w-14 text-center">{{ page() }} / {{ pages() }}</span><app-button variant="outline" [disabled]="page() >= pages()" (click)="pageChange.emit(page() + 1)">{{ t.text('Next') }}</app-button></div></div>`, changeDetection: ChangeDetectionStrategy.OnPush })
+export class PaginationComponent { readonly t = inject(TranslatorService); readonly page = input.required<number>(); readonly pages = input.required<number>(); readonly total = input.required<number>(); readonly itemLabel = input('items'); readonly pageChange = output<number>(); }
