@@ -40,11 +40,12 @@ import { TranslatorService } from "../lang/translator.service";
         "
         [(value)]="innerValue"
         (valueChange)="onInnerChange($event)"
+        (blur)="onTouched()"
       />
 
       @if (error()) {
         <span class="auth-field-error text-xs text-destructive">
-          {{ error() }}
+          {{ t.text(error()) }}
         </span>
       }
     </label>
@@ -67,7 +68,7 @@ export class CustomInputComponent implements ControlValueAccessor {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (val: string) => void = () => {};
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => {};
+  onTouched: () => void = () => {};
 
   onInnerChange(val: string): void {
     this.value.set(val);

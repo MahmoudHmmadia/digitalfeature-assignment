@@ -5,7 +5,11 @@ import {
   editComment,
   getComments,
 } from "../controllers/comment.controller";
-import { validate, validateParams, validateQuery } from "../middleware/validation.middleware";
+import {
+  validate,
+  validateParams,
+  validateQuery,
+} from "../middleware/validation.middleware";
 import {
   createCommentSchema,
   editCommentSchema,
@@ -21,6 +25,8 @@ commentRoutes
   .post(validate(createCommentSchema), createComment)
   .patch(validate(editCommentSchema), editComment);
 
-commentRoutes.route("/:id").delete(validateParams(commentIdParamsSchema), removeComment);
+commentRoutes
+  .route("/:id")
+  .delete(validateParams(commentIdParamsSchema), removeComment);
 
 export default commentRoutes;

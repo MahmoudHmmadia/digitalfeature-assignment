@@ -6,7 +6,13 @@ import {
   successResponse,
 } from "@/utils/responses";
 import { paginate } from "@/utils/lib";
-import type { AdminCategoryListQueryDto, AppSettingsUpdateDto, CategoryIdParamsDto, CreateCategoryDto, UpdateCategoryDto } from "@/validations/admin.schemas";
+import type {
+  AdminCategoryListQueryDto,
+  AppSettingsUpdateDto,
+  CategoryIdParamsDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from "@/validations/admin.schemas";
 
 export async function getAdminAnalytics(req: Request, res: Response) {
   try {

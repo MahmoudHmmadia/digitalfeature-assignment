@@ -54,8 +54,15 @@ export const swaggerDocument = {
       name: "Votes",
       description: "Vote and withdraw votes on feedback requests.",
     },
-    { name: "Categories", description: "Active feedback categories available to users." },
-    { name: "Administration", description: "Administrator-only analytics, category management, and application settings." },
+    {
+      name: "Categories",
+      description: "Active feedback categories available to users.",
+    },
+    {
+      name: "Administration",
+      description:
+        "Administrator-only analytics, category management, and application settings.",
+    },
   ],
   components: {
     securitySchemes: {
@@ -379,7 +386,14 @@ export const swaggerDocument = {
         type: "object",
         required: ["status"],
         properties: {
-          status: { type: "integer", minimum: 0, maximum: 5, example: 2, description: "0 New, 1 Under review, 2 Planned, 3 In progress, 4 Done, 5 Declined" },
+          status: {
+            type: "integer",
+            minimum: 0,
+            maximum: 5,
+            example: 2,
+            description:
+              "0 New, 1 Under review, 2 Planned, 3 In progress, 4 Done, 5 Declined",
+          },
         },
       },
       PinFeedbackRequest: {
@@ -418,16 +432,135 @@ export const swaggerDocument = {
           timestamp: { type: "string", format: "date-time" },
         },
       },
-      Category: { type: "object", required: ["id", "name", "isActive"], properties: { id: { type: "string", example: "66d8f35a7b2c1c001a82de22" }, name: { type: "string", example: "Feature" }, description: { type: "string", nullable: true, example: "New product capabilities" }, isActive: { type: "boolean", example: true }, createdAt: { type: "string", format: "date-time" }, updatedAt: { type: "string", format: "date-time" } } },
-      CategoryRequest: { type: "object", required: ["name"], properties: { name: { type: "string", minLength: 2, maxLength: 60, example: "Feature" }, description: { type: "string", maxLength: 240, example: "New product capabilities" } } },
-      CategoryUpdateRequest: { type: "object", minProperties: 1, properties: { name: { type: "string", minLength: 2, maxLength: 60 }, description: { type: "string", maxLength: 240 }, isActive: { type: "boolean" } } },
-      CategoryResponse: { type: "object", properties: { materials: ref("#/components/schemas/Category"), message: { type: "string" } } },
-      CategoryListResponse: { type: "object", properties: { materials: { type: "object", properties: { data: { type: "array", items: ref("#/components/schemas/Category") }, totalCount: { type: "integer" }, pagesNumber: { type: "integer" } } }, message: { type: "string" } } },
-      AppSettings: { type: "object", required: ["appVersion", "maintenanceMode"], properties: { id: { type: "string" }, appVersion: { type: "string", example: "1.0.0" }, maintenanceMode: { type: "boolean", example: false }, updatedAt: { type: "string", format: "date-time" } } },
-      AppSettingsRequest: { type: "object", required: ["appVersion", "maintenanceMode"], properties: { appVersion: { type: "string", minLength: 1, maxLength: 30, example: "1.2.0" }, maintenanceMode: { type: "boolean", example: false } } },
-      AppSettingsResponse: { type: "object", properties: { materials: ref("#/components/schemas/AppSettings"), message: { type: "string" } } },
-      AdminAnalytics: { type: "object", properties: { users: { type: "object", properties: { total: { type: "integer" }, active: { type: "integer" }, suspended: { type: "integer" }, deleted: { type: "integer" } } }, feedback: { type: "integer" }, comments: { type: "integer" }, votes: { type: "integer" }, categories: { type: "integer" }, feedbackByStatus: { type: "array", items: { type: "object", properties: { status: { type: "integer", minimum: 0, maximum: 5 }, count: { type: "integer" } } } } } },
-      SetAccountDeletedRequest: { type: "object", required: ["isDeleted"], properties: { isDeleted: { type: "boolean", example: true } } },
+      Category: {
+        type: "object",
+        required: ["id", "name", "isActive"],
+        properties: {
+          id: { type: "string", example: "66d8f35a7b2c1c001a82de22" },
+          name: { type: "string", example: "Feature" },
+          description: {
+            type: "string",
+            nullable: true,
+            example: "New product capabilities",
+          },
+          isActive: { type: "boolean", example: true },
+          createdAt: { type: "string", format: "date-time" },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      CategoryRequest: {
+        type: "object",
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            minLength: 2,
+            maxLength: 60,
+            example: "Feature",
+          },
+          description: {
+            type: "string",
+            maxLength: 240,
+            example: "New product capabilities",
+          },
+        },
+      },
+      CategoryUpdateRequest: {
+        type: "object",
+        minProperties: 1,
+        properties: {
+          name: { type: "string", minLength: 2, maxLength: 60 },
+          description: { type: "string", maxLength: 240 },
+          isActive: { type: "boolean" },
+        },
+      },
+      CategoryResponse: {
+        type: "object",
+        properties: {
+          materials: ref("#/components/schemas/Category"),
+          message: { type: "string" },
+        },
+      },
+      CategoryListResponse: {
+        type: "object",
+        properties: {
+          materials: {
+            type: "object",
+            properties: {
+              data: {
+                type: "array",
+                items: ref("#/components/schemas/Category"),
+              },
+              totalCount: { type: "integer" },
+              pagesNumber: { type: "integer" },
+            },
+          },
+          message: { type: "string" },
+        },
+      },
+      AppSettings: {
+        type: "object",
+        required: ["appVersion", "maintenanceMode"],
+        properties: {
+          id: { type: "string" },
+          appVersion: { type: "string", example: "1.0.0" },
+          maintenanceMode: { type: "boolean", example: false },
+          updatedAt: { type: "string", format: "date-time" },
+        },
+      },
+      AppSettingsRequest: {
+        type: "object",
+        required: ["appVersion", "maintenanceMode"],
+        properties: {
+          appVersion: {
+            type: "string",
+            minLength: 1,
+            maxLength: 30,
+            example: "1.2.0",
+          },
+          maintenanceMode: { type: "boolean", example: false },
+        },
+      },
+      AppSettingsResponse: {
+        type: "object",
+        properties: {
+          materials: ref("#/components/schemas/AppSettings"),
+          message: { type: "string" },
+        },
+      },
+      AdminAnalytics: {
+        type: "object",
+        properties: {
+          users: {
+            type: "object",
+            properties: {
+              total: { type: "integer" },
+              active: { type: "integer" },
+              suspended: { type: "integer" },
+              deleted: { type: "integer" },
+            },
+          },
+          feedback: { type: "integer" },
+          comments: { type: "integer" },
+          votes: { type: "integer" },
+          categories: { type: "integer" },
+          feedbackByStatus: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                status: { type: "integer", minimum: 0, maximum: 5 },
+                count: { type: "integer" },
+              },
+            },
+          },
+        },
+      },
+      SetAccountDeletedRequest: {
+        type: "object",
+        required: ["isDeleted"],
+        properties: { isDeleted: { type: "boolean", example: true } },
+      },
     },
     responses: {
       BadRequest: {
@@ -1137,25 +1270,265 @@ export const swaggerDocument = {
       },
     },
     "/categories": {
-      get: { tags: ["Categories"], summary: "List active categories", operationId: "listCategories", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage"), { name: "search", in: "query", schema: { type: "string" } }, { name: "page", in: "query", schema: { type: "integer", minimum: 1, default: 1 } }, { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 50, default: 10 } }], responses: { "200": { description: "Paginated active categories", content: json(ref("#/components/schemas/CategoryListResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
+      get: {
+        tags: ["Categories"],
+        summary: "List active categories",
+        operationId: "listCategories",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          ref("#/components/parameters/AcceptLanguage"),
+          { name: "search", in: "query", schema: { type: "string" } },
+          {
+            name: "page",
+            in: "query",
+            schema: { type: "integer", minimum: 1, default: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            schema: { type: "integer", minimum: 1, maximum: 50, default: 10 },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Paginated active categories",
+            content: json(ref("#/components/schemas/CategoryListResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
     "/accounts/{id}/deleted": {
-      patch: { tags: ["Accounts"], summary: "Delete or restore a user account", description: "Admin only. Deleting an account also invalidates its current session.", operationId: "setAccountDeleted", security: [{ bearerAuth: [] }], parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" } }, ref("#/components/parameters/AcceptLanguage")], requestBody: { required: true, content: json(ref("#/components/schemas/SetAccountDeletedRequest")) }, responses: { "200": { description: "Account state updated", content: json(ref("#/components/schemas/ApiMessage")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
+      patch: {
+        tags: ["Accounts"],
+        summary: "Delete or restore a user account",
+        description:
+          "Admin only. Deleting an account also invalidates its current session.",
+        operationId: "setAccountDeleted",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" },
+          },
+          ref("#/components/parameters/AcceptLanguage"),
+        ],
+        requestBody: {
+          required: true,
+          content: json(ref("#/components/schemas/SetAccountDeletedRequest")),
+        },
+        responses: {
+          "200": {
+            description: "Account state updated",
+            content: json(ref("#/components/schemas/ApiMessage")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
     "/admin/analytics": {
-      get: { tags: ["Administration"], summary: "Get administration analytics", operationId: "getAdminAnalytics", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage")], responses: { "200": { description: "Administration metrics", content: json({ type: "object", properties: { materials: ref("#/components/schemas/AdminAnalytics"), message: { type: "string" } } }) }, "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
+      get: {
+        tags: ["Administration"],
+        summary: "Get administration analytics",
+        operationId: "getAdminAnalytics",
+        security: [{ bearerAuth: [] }],
+        parameters: [ref("#/components/parameters/AcceptLanguage")],
+        responses: {
+          "200": {
+            description: "Administration metrics",
+            content: json({
+              type: "object",
+              properties: {
+                materials: ref("#/components/schemas/AdminAnalytics"),
+                message: { type: "string" },
+              },
+            }),
+          },
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
     "/admin/categories": {
-      get: { tags: ["Administration"], summary: "List categories for administration", operationId: "listAdminCategories", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage"), { name: "search", in: "query", schema: { type: "string" } }, { name: "active", in: "query", schema: { type: "boolean" } }, { name: "sortBy", in: "query", schema: { type: "string", enum: ["name", "createdAt", "updatedAt"], default: "name" } }, { name: "sortOrder", in: "query", schema: { type: "string", enum: ["asc", "desc"], default: "asc" } }, { name: "page", in: "query", schema: { type: "integer", minimum: 1 } }, { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 50 } }], responses: { "200": { description: "Paginated categories", content: json(ref("#/components/schemas/CategoryListResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
-      post: { tags: ["Administration"], summary: "Create a category", operationId: "createAdminCategory", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage")], requestBody: { required: true, content: json(ref("#/components/schemas/CategoryRequest")) }, responses: { "201": { description: "Category created", content: json(ref("#/components/schemas/CategoryResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "409": ref("#/components/responses/Conflict"), "500": ref("#/components/responses/ServerError") } },
+      get: {
+        tags: ["Administration"],
+        summary: "List categories for administration",
+        operationId: "listAdminCategories",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          ref("#/components/parameters/AcceptLanguage"),
+          { name: "search", in: "query", schema: { type: "string" } },
+          { name: "active", in: "query", schema: { type: "boolean" } },
+          {
+            name: "sortBy",
+            in: "query",
+            schema: {
+              type: "string",
+              enum: ["name", "createdAt", "updatedAt"],
+              default: "name",
+            },
+          },
+          {
+            name: "sortOrder",
+            in: "query",
+            schema: { type: "string", enum: ["asc", "desc"], default: "asc" },
+          },
+          {
+            name: "page",
+            in: "query",
+            schema: { type: "integer", minimum: 1 },
+          },
+          {
+            name: "limit",
+            in: "query",
+            schema: { type: "integer", minimum: 1, maximum: 50 },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Paginated categories",
+            content: json(ref("#/components/schemas/CategoryListResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
+      post: {
+        tags: ["Administration"],
+        summary: "Create a category",
+        operationId: "createAdminCategory",
+        security: [{ bearerAuth: [] }],
+        parameters: [ref("#/components/parameters/AcceptLanguage")],
+        requestBody: {
+          required: true,
+          content: json(ref("#/components/schemas/CategoryRequest")),
+        },
+        responses: {
+          "201": {
+            description: "Category created",
+            content: json(ref("#/components/schemas/CategoryResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "409": ref("#/components/responses/Conflict"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
     "/admin/categories/{id}": {
-      patch: { tags: ["Administration"], summary: "Update a category", operationId: "updateAdminCategory", security: [{ bearerAuth: [] }], parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" } }, ref("#/components/parameters/AcceptLanguage")], requestBody: { required: true, content: json(ref("#/components/schemas/CategoryUpdateRequest")) }, responses: { "200": { description: "Category updated", content: json(ref("#/components/schemas/CategoryResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "409": ref("#/components/responses/Conflict"), "500": ref("#/components/responses/ServerError") } },
-      delete: { tags: ["Administration"], summary: "Delete an unused category", description: "Returns 409 when feedback requests reference the category.", operationId: "deleteAdminCategory", security: [{ bearerAuth: [] }], parameters: [{ name: "id", in: "path", required: true, schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" } }, ref("#/components/parameters/AcceptLanguage")], responses: { "200": { description: "Category deleted", content: json(ref("#/components/schemas/CategoryResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "409": { description: "Category is referenced by feedback", content: json(ref("#/components/schemas/ApiError")) }, "500": ref("#/components/responses/ServerError") } },
+      patch: {
+        tags: ["Administration"],
+        summary: "Update a category",
+        operationId: "updateAdminCategory",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" },
+          },
+          ref("#/components/parameters/AcceptLanguage"),
+        ],
+        requestBody: {
+          required: true,
+          content: json(ref("#/components/schemas/CategoryUpdateRequest")),
+        },
+        responses: {
+          "200": {
+            description: "Category updated",
+            content: json(ref("#/components/schemas/CategoryResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "409": ref("#/components/responses/Conflict"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
+      delete: {
+        tags: ["Administration"],
+        summary: "Delete an unused category",
+        description:
+          "Returns 409 when feedback requests reference the category.",
+        operationId: "deleteAdminCategory",
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            schema: { type: "string", pattern: "^[a-fA-F0-9]{24}$" },
+          },
+          ref("#/components/parameters/AcceptLanguage"),
+        ],
+        responses: {
+          "200": {
+            description: "Category deleted",
+            content: json(ref("#/components/schemas/CategoryResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "409": {
+            description: "Category is referenced by feedback",
+            content: json(ref("#/components/schemas/ApiError")),
+          },
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
     "/admin/settings": {
-      get: { tags: ["Administration"], summary: "Get application settings", operationId: "getAppSettings", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage")], responses: { "200": { description: "Current application settings", content: json(ref("#/components/schemas/AppSettingsResponse")) }, "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
-      patch: { tags: ["Administration"], summary: "Update application settings", description: "Enabling maintenance mode invalidates all non-admin sessions.", operationId: "updateAppSettings", security: [{ bearerAuth: [] }], parameters: [ref("#/components/parameters/AcceptLanguage")], requestBody: { required: true, content: json(ref("#/components/schemas/AppSettingsRequest")) }, responses: { "200": { description: "Settings updated", content: json(ref("#/components/schemas/AppSettingsResponse")) }, "400": ref("#/components/responses/BadRequest"), "401": ref("#/components/responses/Unauthorized"), "403": ref("#/components/responses/Unauthorized"), "500": ref("#/components/responses/ServerError") } },
+      get: {
+        tags: ["Administration"],
+        summary: "Get application settings",
+        operationId: "getAppSettings",
+        security: [{ bearerAuth: [] }],
+        parameters: [ref("#/components/parameters/AcceptLanguage")],
+        responses: {
+          "200": {
+            description: "Current application settings",
+            content: json(ref("#/components/schemas/AppSettingsResponse")),
+          },
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
+      patch: {
+        tags: ["Administration"],
+        summary: "Update application settings",
+        description:
+          "Enabling maintenance mode invalidates all non-admin sessions.",
+        operationId: "updateAppSettings",
+        security: [{ bearerAuth: [] }],
+        parameters: [ref("#/components/parameters/AcceptLanguage")],
+        requestBody: {
+          required: true,
+          content: json(ref("#/components/schemas/AppSettingsRequest")),
+        },
+        responses: {
+          "200": {
+            description: "Settings updated",
+            content: json(ref("#/components/schemas/AppSettingsResponse")),
+          },
+          "400": ref("#/components/responses/BadRequest"),
+          "401": ref("#/components/responses/Unauthorized"),
+          "403": ref("#/components/responses/Unauthorized"),
+          "500": ref("#/components/responses/ServerError"),
+        },
+      },
     },
   },
 } as const;

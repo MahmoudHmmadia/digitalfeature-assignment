@@ -21,7 +21,7 @@ import { TranslatorService } from "../../lang/translator.service";
   template: `
     <app-auth-container
       title="Verify your email"
-      [subtitle]="'We sent a code to ' + svc.email()"
+      [subtitle]="t.text('We sent a code to') + ' ' + svc.email()"
     >
       <form
         class="flex flex-col gap-5"
@@ -51,7 +51,7 @@ import { TranslatorService } from "../../lang/translator.service";
             [disabled]="svc.resending()"
             (click)="svc.resendCode()"
           >
-            {{ svc.resending() ? "Sending..." : "Resend code" }}
+            {{ t.text(svc.resending() ? "Sending..." : "Resend code") }}
           </button>
         } @else {
           <p class="text-sm text-muted-foreground">

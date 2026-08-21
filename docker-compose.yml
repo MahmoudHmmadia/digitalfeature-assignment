@@ -1,20 +1,84 @@
 services:
   mongodb:
     image: mongo:7
+    restart: unless-stopped
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT:-27017}:27017"
     volumes:
       - mongodb_data:/data/db
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          'mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({ _id: ''rs0'', members: [{ _id: 0, host: ''127.0.0.1:27017'' }] }).ok }" | grep 1',
+          'mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({ _id: ''rs0'', members: [{ _id: 0, host: ''mongodb:27017'' }] }).ok }" | grep 1',
         ]
       interval: 5s
       timeout: 5s
       retries: 20
+      start_period: 5s
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      MODE: ${MODE:-DEV}
+      DATABASE_URL: ${DATABASE_URL:-mongodb://mongodb:27017/feedbackhub?replicaSet=rs0}
+      SECRET: ${SECRET:-replace-this-development-secret}
+      DEV_URL: ${DEV_URL:-http://localhost:3000}
+      URL: ${PUBLIC_API_URL:-http://localhost:3000}
+      IMAGES_PATH: ${IMAGES_PATH:-assets/images}
+      ASSETS_PATH: ${ASSETS_PATH:-assets}
+      EMAIL: ${EMAIL:-}
+      PASSWORD: ${PASSWORD:-}
+      EMAIL_FORM: ${EMAIL_FORM:-}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@example.com}
+      ADMIN_NAME: ${ADMIN_NAME:-Admin User}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123456}
+      PRISMA_DB_PUSH: ${PRISMA_DB_PUSH:-true}
+    ports:
+      - "${SERVER_PORT:-3000}:3000"
+    volumes:
+      - server_uploads:/app/server/public
+      - server_logs:/app/logs
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bun",
+          "-e",
+          "fetch('http://localhost:3000/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM: http://server:3000
+    ports:
+      - "${CLIENT_PORT:-8080}:80"
+    depends_on:
+      server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   mongodb_data:
+  server_uploads:
+  server_logs:

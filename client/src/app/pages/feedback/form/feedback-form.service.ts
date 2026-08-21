@@ -16,7 +16,28 @@ export class FeedbackFormService {
   readonly loadingPage = signal(false);
   readonly editId = signal<string | null>(null);
   readonly error = signal("");
+  readonly submitted = signal(false);
   readonly isEdit = computed(() => !!this.editId());
+  readonly validationErrors = computed(() => {
+    const errors: Record<string, string> = {};
+    const title = this.title().trim();
+    const description = this.description().trim();
+    const categoryId = this.categoryId().trim();
+
+    if (!title) errors["title"] = "Title is required";
+    else if (title.length < 3 || title.length > 120)
+      errors["title"] = "Title must be between 3 and 120 characters";
+
+    if (!description) errors["description"] = "Description is required";
+    else if (description.length > 5000)
+      errors["description"] = "Description must be 5000 characters or fewer";
+
+    if (!categoryId) errors["categoryId"] = "Category is required";
+    else if (!/^[0-9a-fA-F]{24}$/.test(categoryId))
+      errors["categoryId"] = "Please choose a valid category";
+
+    return errors;
+  });
   async init(id?: string): Promise<void> {
     this.loadingPage.set(true);
     try {
@@ -37,18 +58,19 @@ export class FeedbackFormService {
     }
   }
   async submit(): Promise<void> {
+    this.submitted.set(true);
     const title = this.title().trim();
     const description = this.description().trim();
-    if (title.length < 3 || !description || !this.categoryId()) {
-      this.error.set(
-        "Enter a title of at least 3 characters, a description, and a category.",
-      );
+    const categoryId = this.categoryId().trim();
+
+    if (Object.keys(this.validationErrors()).length > 0) {
+      this.error.set("Please correct the highlighted fields.");
       return;
     }
     this.loading.set(true);
     this.error.set("");
     try {
-      const data = { title, description, categoryId: this.categoryId() };
+      const data = { title, description, categoryId };
       const id = this.editId();
       const res = id
         ? await this.api.update(id, data)

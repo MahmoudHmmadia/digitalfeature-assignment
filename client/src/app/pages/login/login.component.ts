@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterLink } from "@angular/router";
 import { AuthContainerComponent } from "../../components/auth-container.component";
@@ -66,6 +71,18 @@ import { TranslatorService } from "../../lang/translator.service";
         </app-custom-button>
       </form>
 
+      <app-divider [text]="t.text('or continue with')" />
+
+      <app-social-button provider="google" (clicked)="showGoogleNotice()">
+        {{ t.text("Continue with Google") }}
+      </app-social-button>
+
+      @if (googleNotice()) {
+        <p class="mt-2 text-center text-xs text-muted-foreground" role="status">
+          {{ t.text("Google sign-in is currently in development.") }}
+        </p>
+      }
+
       <p class="mt-4 text-center text-sm text-muted-foreground">
         {{ t.text("Don't have an account?") }}
         <a
@@ -82,4 +99,9 @@ import { TranslatorService } from "../../lang/translator.service";
 export class LoginComponent {
   readonly svc = inject(LoginService);
   readonly t = inject(TranslatorService);
+  readonly googleNotice = signal(false);
+
+  showGoogleNotice(): void {
+    this.googleNotice.set(true);
+  }
 }

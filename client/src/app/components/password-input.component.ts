@@ -43,7 +43,9 @@ import { TranslatorService } from "../lang/translator.service";
           type="button"
           class="absolute right-0 top-0 flex h-9 w-10 items-center justify-center text-muted-foreground transition-colors hover:text-foreground"
           (click)="toggleVisibility()"
-          [attr.aria-label]="visible() ? 'Hide password' : 'Show password'"
+          [attr.aria-label]="
+            t.text(visible() ? 'Hide password' : 'Show password')
+          "
         >
           @if (visible()) {
             <svg
@@ -103,7 +105,7 @@ import { TranslatorService } from "../lang/translator.service";
 
       @if (error()) {
         <span class="auth-field-error text-xs text-destructive">
-          {{ error() }}
+          {{ t.text(error()) }}
         </span>
       }
     </label>

@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: feedbackhub-uploads
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feedbackhub-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: feedbackhub-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: feedbackhub-server
+    spec:
+      initContainers:
+        - name: schema-sync
+          image: feedbackhub-server:local
+          imagePullPolicy: IfNotPresent
+          command:
+            - /app/node_modules/.bin/prisma
+            - db
+            - push
+            - --schema
+            - /app/server/prisma/schema.prisma
+            - --skip-generate
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: feedbackhub-secrets
+                  key: DATABASE_URL
+      containers:
+        - name: server
+          image: feedbackhub-server:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: feedbackhub-config
+            - secretRef:
+                name: feedbackhub-secrets
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 192Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: uploads
+              mountPath: /app/server/public
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: feedbackhub-uploads
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feedbackhub-server
+spec:
+  selector:
+    app.kubernetes.io/name: feedbackhub-server
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

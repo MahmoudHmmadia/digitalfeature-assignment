@@ -108,7 +108,8 @@ export const RESPONSES = {
     // System & General
     SERVER_ERROR: "Server error. Please try again later",
     MAINTENANCE_MODE: "System under maintenance. Please try again later",
-    CATEGORY_IN_USE: "This category cannot be deleted because it is used by feedback.",
+    CATEGORY_IN_USE:
+      "This category cannot be deleted because it is used by feedback.",
     FAILED: "Operation failed",
 
     ACCOUNT_DELETED: "Account has been deleted, please contact support",

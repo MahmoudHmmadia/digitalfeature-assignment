@@ -308,8 +308,15 @@ async function run(): Promise<void> {
   }
 
   const settings = await prisma.appSettings.findFirst();
-  if (settings) await prisma.appSettings.update({ where: { id: settings.id }, data: { appVersion: "1.0.0", maintenanceMode: false } });
-  else await prisma.appSettings.create({ data: { appVersion: "1.0.0", maintenanceMode: false } });
+  if (settings)
+    await prisma.appSettings.update({
+      where: { id: settings.id },
+      data: { appVersion: "1.0.0", maintenanceMode: false },
+    });
+  else
+    await prisma.appSettings.create({
+      data: { appVersion: "1.0.0", maintenanceMode: false },
+    });
   console.log(
     `Seed complete: ${users.length} users, ${categories.length} categories, ${feedback.length} feedback requests, plus comments and votes.`,
   );

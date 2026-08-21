@@ -8,7 +8,11 @@ import {
   updateAdminCategory,
   updateAppSettings,
 } from "@/controllers/admin.controller";
-import { validate, validateParams, validateQuery } from "@/middleware/validation.middleware";
+import {
+  validate,
+  validateParams,
+  validateQuery,
+} from "@/middleware/validation.middleware";
 import {
   adminCategoryListQuerySchema,
   appSettingsUpdateSchema,
@@ -39,7 +43,11 @@ adminRoutes.patch(
   validate(categoryUpdateSchema),
   updateAdminCategory,
 );
-adminRoutes.delete("/categories/:id", validateParams(categoryIdParamsSchema), deleteAdminCategory);
+adminRoutes.delete(
+  "/categories/:id",
+  validateParams(categoryIdParamsSchema),
+  deleteAdminCategory,
+);
 adminRoutes.get("/settings", getAppSettings);
 adminRoutes.patch(
   "/settings",

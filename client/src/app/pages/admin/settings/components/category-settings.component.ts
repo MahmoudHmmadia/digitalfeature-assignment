@@ -96,10 +96,10 @@ import { PaginationComponent } from "../../../../components/ui/pagination.compon
               class="flex items-start justify-between gap-4 border-b p-4 last:border-0"
             >
               <div>
-                <p class="font-medium">{{ t.text(category.name) }}</p>
+                <p class="font-medium">{{ category.name }}</p>
                 @if (category.description) {
                   <p class="mt-1 text-sm text-slate-500">
-                    {{ t.text(category.description) }}
+                    {{ category.description }}
                   </p>
                 }
               </div>
@@ -165,14 +165,14 @@ export class CategorySettingsComponent implements OnInit {
     const item = this.editing();
     const saved = item
       ? await this.svc.updateCategory(
-        item.id,
-        this.name().trim(),
-        this.description().trim(),
-      )
+          item.id,
+          this.name().trim(),
+          this.description().trim(),
+        )
       : await this.svc.createCategory(
-        this.name().trim(),
-        this.description().trim(),
-      );
+          this.name().trim(),
+          this.description().trim(),
+        );
     if (saved) this.reset();
   }
   async remove(): Promise<void> {

@@ -6,7 +6,10 @@ config();
 
 async function seedAdmin() {
   try {
-    if (!(await prisma.appSettings.findFirst())) await prisma.appSettings.create({ data: { appVersion: "1.0.0", maintenanceMode: false } });
+    if (!(await prisma.appSettings.findFirst()))
+      await prisma.appSettings.create({
+        data: { appVersion: "1.0.0", maintenanceMode: false },
+      });
     const existingAdmin = await prisma.account.findFirst({
       where: {
         role: 0,

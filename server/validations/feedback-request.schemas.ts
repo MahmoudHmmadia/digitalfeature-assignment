@@ -54,4 +54,6 @@ export const listFeedbackRequestsQuerySchema = Joi.object({
   limit: Joi.number().integer().min(1).max(100).optional(),
   startIndex: Joi.number().integer().min(0).optional(),
 });
-export const feedbackRequestIdParamsSchema = Joi.object({ id: objectId.required() });
+export const feedbackRequestIdParamsSchema = Joi.object({
+  id: objectId.required(),
+});

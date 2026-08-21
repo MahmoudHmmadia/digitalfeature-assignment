@@ -89,8 +89,16 @@ export async function login(req: Request, res: Response) {
     }
 
     if (account.role === USER_ROLE) {
-      const settings = await prisma.appSettings.findFirst({ select: { maintenanceMode: true } });
-      if (settings?.maintenanceMode) return clientErrorResponse({ message: "MAINTENANCE_MODE", status: 503, res, req });
+      const settings = await prisma.appSettings.findFirst({
+        select: { maintenanceMode: true },
+      });
+      if (settings?.maintenanceMode)
+        return clientErrorResponse({
+          message: "MAINTENANCE_MODE",
+          status: 503,
+          res,
+          req,
+        });
     }
 
     const token = signAccountToken(account.id);

@@ -42,17 +42,22 @@ const validateQuery =
     } catch (err) {
       return serverErrorResponse({ res, err, req });
     }
-    };
+  };
 
 const validateParams =
   (schema: Schema): any =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { error, value } = schema.validate(req.params, { abortEarly: false, convert: true });
+      const { error, value } = schema.validate(req.params, {
+        abortEarly: false,
+        convert: true,
+      });
       if (error) return res.status(400).json({ message: error.message });
       req.params = value;
       return next();
-    } catch (err) { return serverErrorResponse({ res, err, req }); }
+    } catch (err) {
+      return serverErrorResponse({ res, err, req });
+    }
   };
 
 export { validate, validateQuery, validateParams };

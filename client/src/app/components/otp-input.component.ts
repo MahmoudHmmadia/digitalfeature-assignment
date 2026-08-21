@@ -35,7 +35,7 @@ const CODE_LENGTH = 6;
         <span class="text-sm font-medium">{{ t.text(label()) }}</span>
       }
 
-      <div class="flex justify-center gap-2">
+      <div class="flex justify-center gap-2" dir="ltr">
         @for (i of indices; track i) {
           <input
             #digitInput
@@ -55,7 +55,7 @@ const CODE_LENGTH = 6;
 
       @if (error()) {
         <span class="auth-field-error text-center text-xs text-destructive">
-          {{ error() }}
+          {{ t.text(error()) }}
         </span>
       }
     </div>

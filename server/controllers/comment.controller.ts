@@ -98,8 +98,7 @@ export async function getComments(req: Request, res: Response) {
 
     const where: { feedbackRequestId?: string; authorId?: string } = {};
 
-    if (feedbackRequestId)
-      where.feedbackRequestId = feedbackRequestId;
+    if (feedbackRequestId) where.feedbackRequestId = feedbackRequestId;
     if (mine) where.authorId = req.account!.id;
 
     const { data, totalCount, pagesNumber } = await paginate({

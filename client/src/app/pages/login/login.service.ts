@@ -13,13 +13,21 @@ export class LoginService {
   private readonly mutation = inject(CustomMutationService);
 
   readonly loading = signal(false);
+  private readonly validationVersion = signal(0);
 
   readonly form = this.fb.nonNullable.group({
     email: ["", [Validators.required, Validators.email]],
     password: ["", [Validators.required, Validators.minLength(6)]],
   });
 
+  constructor() {
+    this.form.events.subscribe(() => {
+      this.validationVersion.update((version) => version + 1);
+    });
+  }
+
   readonly errors = computed((): Record<string, string | undefined> => {
+    this.validationVersion();
     const controls = this.form.controls;
     const result: Record<string, string | undefined> = {};
 
@@ -43,6 +51,7 @@ export class LoginService {
   async submit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.validationVersion.update((version) => version + 1);
       return;
     }
 

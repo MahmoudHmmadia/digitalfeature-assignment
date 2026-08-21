@@ -24,7 +24,11 @@ import { TranslatorService } from "../../lang/translator.service";
     <app-auth-container
       title="Reset password"
       [subtitle]="
-        'Enter the code sent to ' + svc.email() + ' and your new password'
+        t.text('Enter the code sent to') +
+        ' ' +
+        svc.email() +
+        ' ' +
+        t.text('and your new password')
       "
     >
       <form

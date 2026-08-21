@@ -36,6 +36,7 @@ export class ResetPasswordService {
   private readonly mutation = inject(CustomMutationService);
 
   readonly loading = signal(false);
+  private readonly validationVersion = signal(0);
   readonly email = signal("");
 
   readonly form = this.fb.nonNullable.group(
@@ -51,6 +52,7 @@ export class ResetPasswordService {
   );
 
   readonly errors = computed((): Record<string, string | undefined> => {
+    this.validationVersion();
     const c = this.form.controls;
     const result: Record<string, string | undefined> = {};
 
@@ -79,6 +81,10 @@ export class ResetPasswordService {
   });
 
   constructor() {
+    this.form.events.subscribe(() => {
+      this.validationVersion.update((version) => version + 1);
+    });
+
     this.route.queryParams.subscribe((params) => {
       if (params["email"]) {
         this.email.set(params["email"]);
@@ -89,6 +95,7 @@ export class ResetPasswordService {
   async submit(): Promise<void> {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.validationVersion.update((version) => version + 1);
       return;
     }
 

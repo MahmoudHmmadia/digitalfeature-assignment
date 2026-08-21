@@ -35,23 +35,48 @@ import { FeedbackFormService } from "./feedback-form.service";
       <section
         class="mx-auto grid max-w-2xl gap-5 rounded-lg border bg-white p-6"
       >
-        <label class="grid gap-1.5"
-          ><span class="text-sm font-medium">{{ t.text("Title") }}</span
-          ><app-input
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium">{{ t.text("Title") }}</span>
+          <app-input
             placeholder="Short summary"
-            [(value)]="svc.title" /></label
-        ><label class="grid gap-1.5"
-          ><span class="text-sm font-medium">{{ t.text("Description") }}</span
-          ><app-textarea
+            [(value)]="svc.title"
+            [className]="
+              svc.submitted() && svc.validationErrors()['title']
+                ? 'border-destructive focus-visible:border-destructive focus-visible:ring-destructive/30'
+                : ''
+            "
+          />
+        </label>
+        @if (svc.submitted() && svc.validationErrors()["title"]; as error) {
+          <p class="text-xs text-destructive">{{ t.text(error) }}</p>
+        }
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium">{{ t.text("Description") }}</span>
+          <app-textarea
             placeholder="What problem should be solved?"
             [rows]="8"
-            [(value)]="svc.description" /></label
-        ><label class="grid gap-1.5"
-          ><span class="text-sm font-medium">{{ t.text("Category") }}</span
-          ><app-searchable-category-select
+            [(value)]="svc.description"
+          />
+        </label>
+        @if (
+          svc.submitted() && svc.validationErrors()["description"];
+          as error
+        ) {
+          <p class="text-xs text-destructive">{{ t.text(error) }}</p>
+        }
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium">{{ t.text("Category") }}</span>
+          <app-searchable-category-select
             placeholder="Choose category"
             [(value)]="svc.categoryId"
-        /></label>
+          />
+        </label>
+        @if (
+          svc.submitted() && svc.validationErrors()["categoryId"];
+          as error
+        ) {
+          <p class="text-xs text-destructive">{{ t.text(error) }}</p>
+        }
         @if (svc.error()) {
           <p class="text-sm text-red-600">{{ t.text(svc.error()) }}</p>
         }

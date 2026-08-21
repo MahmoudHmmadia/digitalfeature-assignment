@@ -1,0 +1,13 @@
+.git
+.turbo
+node_modules
+**/node_modules
+dist
+**/dist
+*.log
+logs
+.env
+.env.*
+!.env.example
+FeedbackHub-Assignment.pdf
+.pdf-extract-temp.mjs

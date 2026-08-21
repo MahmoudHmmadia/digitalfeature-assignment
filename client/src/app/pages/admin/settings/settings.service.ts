@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from "@angular/core";
 import { AdminApiService, type AppSettings } from "../../../api/admin.api";
 import type { FeedbackCategory } from "../../../types/feedback";
-import { CustomMutationService } from '../../../hooks/use-custom-mutation.service';
+import { CustomMutationService } from "../../../hooks/use-custom-mutation.service";
 @Injectable()
 export class AdminSettingsService {
   private readonly api = inject(AdminApiService);
@@ -34,7 +34,10 @@ export class AdminSettingsService {
   ): Promise<boolean> {
     this.saving.set(true);
     try {
-      const res = await this.api.updateSettings({ appVersion, maintenanceMode });
+      const res = await this.api.updateSettings({
+        appVersion,
+        maintenanceMode,
+      });
       this.settings.set(res.data.materials);
       this.mutation.success(res, { isLog: true });
       return true;

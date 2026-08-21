@@ -66,7 +66,9 @@ authRoutes.route("/new-code").post(validate(newOtpSchema), requestNewCode);
  *     security:
  *       - bearerAuth: []
  */
-authRoutes.route("/location").get(validateQuery(locationQuerySchema), getLocation);
+authRoutes
+  .route("/location")
+  .get(validateQuery(locationQuerySchema), getLocation);
 
 /**
  * @openapi

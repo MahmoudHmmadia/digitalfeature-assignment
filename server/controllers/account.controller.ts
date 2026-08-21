@@ -155,7 +155,8 @@ export async function setAccountDeleted(req: Request, res: Response) {
 
 export async function getAccounts(req: Request, res: Response) {
   try {
-    const { name, email, isSuspended, isDeleted } = req.query as ListAccountsQueryDto;
+    const { name, email, isSuspended, isDeleted } =
+      req.query as ListAccountsQueryDto;
     const where: {
       name?: any;
       email?: any;

@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { validate, validateParams, validateQuery } from "../middleware/validation.middleware";
+import {
+  validate,
+  validateParams,
+  validateQuery,
+} from "../middleware/validation.middleware";
 import {
   editMyAccountSchema,
   toggleAccountSuspendedSchema,
@@ -35,6 +39,11 @@ accountRoutes
 
 accountRoutes
   .route("/:id/deleted")
-  .patch(verifyAdmin, validateParams(accountIdParamsSchema), validate(setAccountDeletedSchema), setAccountDeleted);
+  .patch(
+    verifyAdmin,
+    validateParams(accountIdParamsSchema),
+    validate(setAccountDeletedSchema),
+    setAccountDeleted,
+  );
 
 export default accountRoutes;

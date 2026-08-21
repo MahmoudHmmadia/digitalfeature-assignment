@@ -108,4 +108,6 @@ export const resetPasswordSchema = Joi.object({
   }),
   password: Joi.string().min(8).required(),
 });
-export const locationQuerySchema = Joi.object({ query: Joi.string().trim().allow('').max(200).optional() });
+export const locationQuerySchema = Joi.object({
+  query: Joi.string().trim().allow("").max(200).optional(),
+});

@@ -9,7 +9,13 @@ export type EditCommentDto = {
   id: string;
   content: string;
 };
-export type ListCommentsQueryDto = { feedbackRequestId?: string; mine?: boolean; page?: number; limit?: number; startIndex?: number };
+export type ListCommentsQueryDto = {
+  feedbackRequestId?: string;
+  mine?: boolean;
+  page?: number;
+  limit?: number;
+  startIndex?: number;
+};
 export type CommentIdParamsDto = { id: string };
 
 export const createCommentSchema = Joi.object({
@@ -29,4 +35,6 @@ export const listCommentsQuerySchema = Joi.object({
   limit: Joi.number().integer().min(1).max(100).optional(),
   startIndex: Joi.number().integer().min(0).optional(),
 });
-export const commentIdParamsSchema = Joi.object({ id: Joi.string().hex().length(24).required() });
+export const commentIdParamsSchema = Joi.object({
+  id: Joi.string().hex().length(24).required(),
+});
